@@ -13,5 +13,20 @@
 <p><strong>Description: </strong></p>
 {{ post.description }}
 
+<h2>comments:</h2>
+There are {{num_post_comments }}on this post:
+{% if post_comments %}
+
+{% for comment in post_comments %}
+
+{{comment_title }}<br>
+{{comment_text }} <br>
+{{commenter.username }}
+
+{% endfor %}
+
+{% endif%}
+
+
 
 {% endblock %}

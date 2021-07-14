@@ -5,11 +5,14 @@
     min-width: 12rem;
 }
 
-.list-links,
-.list-links a {
+.list-links {
     list-style-type: none; /* Remove bullets */
-    padding: 1rem 0; /* Remove padding */
-    margin: 1rem 0; /* Remove margins */
+    padding: 0 0; /* Remove padding */
+    margin: 0 0; /* Remove margins */
+    
+}
+.list-links a {
+    text-decoration: none;
 }
 
 .container.main {

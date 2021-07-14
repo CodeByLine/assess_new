@@ -10,7 +10,7 @@ And there are <strong>{{num_comments}}</strong> comments by <strong>{{ num_comme
 <hr>
 
 {% for post in post_list %}
-<ul class="list-links"> <li><strong> <a href="{{ post.get_absolute_url }}"> {{post_title}} </a></strong> by <a href="{{ post.author.get_absolute_url }}">{{ post.author }} </a> 
+<ul class="list-links"> <li><strong> <a href="{{ post.get_absolute_url }}"> {{post.post_title}} </a></strong> by <a href="{{ post.author.get_absolute_url }}">{{ post.author }} </a> 
 Comment(s): {{ post.comment }} by  <a href="#">{{ post.comment.commenter }}</a></li></ul>
 {% endfor %}
 

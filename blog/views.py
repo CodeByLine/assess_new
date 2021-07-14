@@ -33,18 +33,79 @@ def index(request):
     return render(request, 'index.html', context=context)
 
 class PostListView(generic.ListView):
-    pass
+    model = Post
+    post_list = Post.objects.all()
+    num_posts = Post.objects.all().count()
+    num_authors = Author.objects.count()
+    num_comments = Comment.objects.all().count()
+    num_commenters = Commenter.objects.count()
+
+    template_name = 'blog/post_list.html'  # Specify your own template name/location
+
+    context_vars = {
+        'num_posts': num_posts,
+        'num_authors': num_authors,
+        'post_list' : post_list,
+        'num_comments' : num_comments,
+        'num_commenters' : Commenter.objects.count(),
+    }
+    def get_context_data(self, **kwargs):
+        context = super(PostListView, self).get_context_data(**kwargs)
+        context.update(PostListView.context_vars)
+        return context
 
 
 class PostDetailView(generic.DetailView):
     model = Post
+
+    def post_detail_view(request, primary_key):
+        post = get_object_or_404(Post, pk=primary_key)
+        
+        return render(request, 'post_detail.html', context={'post': post})
+    
+    # post_comments = Comment.objects.filter(self.kwargs['pk'])
+    # num_post_comments = post_comments.count()
+
+    # context_vars = {
+    #     'post_comments' : post_comments,
+    #     'num_post_comments' : num_post_comments,
+    # }
+
+    context_object_name = 'post'
+
+    def get_context_data(self, **kwargs):
+        context = super(PostDetailView, self).get_context_data(**kwargs)
+        context ['post_comments'] = Comment.objects.filter(post=self.kwargs['pk'])
+        return context
+    
+
+    # def get_context_data(self, **kwargs):
+    #     context = super(PostDetailView, self).get_context_data(**kwargs)
+    #     context.update(PostDetailView.context_vars)
+    #     return context
     
 
 class AuthorListView(generic.ListView):
     model = Author
+    template = 'author_list.html'
+    authors = Author.objects.all()
+    num_authors=Author.objects.count()
+
+
+    def get_context_data(self, **kwargs):
+        context = super(AuthorListView, self).get_context_data(**kwargs)
+        context['num_authors'] = Author.objects.count()
+        context['authors'] = Author.objects.all()
+        return context
     
 
 
 class AuthorDetailView(generic.DetailView):
     model = Author
+    context_object_name = 'author'
+
+    def get_context_data(self, **kwargs):
+        context = super(AuthorDetailView, self).get_context_data(**kwargs)
+        context ['author_posts'] = Post.objects.filter(author=self.kwargs['pk'])
+        return context
     
