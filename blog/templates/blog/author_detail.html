@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<h1>About Author {{ author.author_first_name}} {{ author.author_last_name}} </h1>
+
+<br><br>
+Here are posts by {{ author.author_first_name}} {{ author.author_last_name}}: <br><br>
+<ul class="list_links">
+{% for post in author_posts %}
+<strong>{{ post.post_title }}</strong> <p class="small">(Posted: {{post.post_created_at}})</p>
+{% endfor %} <br>
+</ul>
+{% endblock %}

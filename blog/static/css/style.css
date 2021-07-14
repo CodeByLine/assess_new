@@ -1,0 +1,18 @@
+/* css */
+
+#sidebar {
+    margin-left: 3rem;
+    min-width: 12rem;
+}
+
+.list-links,
+.list-links a {
+    list-style-type: none; /* Remove bullets */
+    padding: 1rem 0; /* Remove padding */
+    margin: 1rem 0; /* Remove margins */
+}
+
+.container.main {
+    flex-direction: column;
+    /* margin-left: 4rem; */
+}

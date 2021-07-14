@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<h1>All Posts:</h1>
+
+This blog has a total of <strong>{{num_posts}}</strong> posts by <strong>{{ num_authors}}</strong> authors. <br>
+And there are <strong>{{num_comments}}</strong> comments by <strong>{{ num_commenters}}</strong> commenters.
+
+<hr>
+
+{% for post in post_list %}
+<ul class="list-links"> <li> <a href="{{ post.get_absolute_url }}"><strong>{{ post.post_title}}</strong></a>  by <a href="{{ post.author.get_absolute_url }}">{{ post.author}} </a>
+Comment(s): {{ post.comment }} by  <a href="#">{{ post.comment.commenter }}</a></li>
+</ul>
+{% endfor %}
+
+
+
+{% endblock %}
