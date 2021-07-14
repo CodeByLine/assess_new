@@ -6,7 +6,7 @@ from django.urls import reverse, reverse_lazy
 
 
 def index(request):
-    """View function for home page of site."""
+    
     post_list = Post.objects.all()
     # Generate counts of some of the main objects
     num_posts = Post.objects.all().count()

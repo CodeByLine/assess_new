@@ -11,8 +11,8 @@ class Post(models.Model):
     author = models.ForeignKey('Author', on_delete=models.SET_DEFAULT, default=None, null=True)
 
     description = models.TextField(max_length=1000, help_text='Enter a brief description of this post')
-    comment = models.ForeignKey('Comment', on_delete=models.CASCADE)
-    commenter = models.ForeignKey('Commenter', on_delete=models.CASCADE)
+    comment = models.ForeignKey('Comment', on_delete=models.SET_DEFAULT, default=None, null=True)
+    commenter = models.ForeignKey('Commenter', on_delete=models.SET_DEFAULT, default=None, null=True)
 
     def __str__(self):
         return self.post_title
