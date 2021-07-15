@@ -4,8 +4,8 @@
 {% block content %}
 
 <h1>Index Here</h1>
-This blog has a total of <strong>{{num_posts}}</strong> posts by <strong>{{ num_authors}}</strong> authors. <br>
-And there are <strong>{{num_comments}}</strong> comments by <strong>{{ num_commenters}}</strong> commenters.
+This blog has a total of <strong>{{num_posts}}</strong> posts by <strong>{{ num_authors}}</strong> author. <br>
+And there are <strong>{{num_comments}}</strong> comment{{num_comments|pluralize:"s"}}  by <strong>{{ num_commenters}}</strong> commenter{{num_commenter|pluralize:"s"}}.
 
 <hr>
 

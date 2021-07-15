@@ -78,12 +78,17 @@ class AuthorListView(generic.ListView):
     template = 'author_list.html'
     authors = Author.objects.all()
     num_authors=Author.objects.count()
+    num_posts = Post.objects.count()
 
+    context_vars = {
+        'authors' : authors,
+        'num_authors' : num_authors,
+        'num_posts' : num_posts,
+    }
 
     def get_context_data(self, **kwargs):
         context = super(AuthorListView, self).get_context_data(**kwargs)
-        context['num_authors'] = Author.objects.count()
-        context['authors'] = Author.objects.all()
+        context.update(AuthorListView.context_vars)
         return context
     
 

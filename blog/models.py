@@ -59,8 +59,9 @@ class Comment(TimeStampMixin):
     comment_created_at = models.DateTimeField(auto_now_add=True)
     comment_updated_at = models.DateTimeField(auto_now=True)
     commenter = models.ForeignKey('Commenter', on_delete=models.SET_DEFAULT, default=None, null=True)
-    
-    post = models.ForeignKey('Post', on_delete=models.SET_DEFAULT, default=None, null=True) #useless
+
+    #useless
+    #post = models.ForeignKey('Post', on_delete=models.SET_DEFAULT, default=None, null=True) #useless
 
     post_connected =  models.ForeignKey(Post, related_name='comments', on_delete=models.CASCADE, default=None, null=True)
 
