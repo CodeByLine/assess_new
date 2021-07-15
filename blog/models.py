@@ -11,11 +11,18 @@ class Post(models.Model):
     author = models.ForeignKey('Author', on_delete=models.SET_DEFAULT, default=None, null=True)
 
     description = models.TextField(max_length=1000, help_text='Enter a brief description of this post')
-    # comment = models.ForeignKey('Comment', on_delete=models.SET_DEFAULT, default=None, null=True)
-    # commenter = models.ForeignKey('Commenter', on_delete=models.SET_DEFAULT, default=None, null=True)
+
+
+    @property
+    def num_comments(self):
+        return Comment.objects.filter(post_connected=self).count()
+
+    @property
+    def post_comments(self):
+        return Comment.objects.filter(post_connected=self)
 
     def __str__(self):
-        return self.post_title
+        return self.author.author_username + ', ' + self.post_title[:40]
 
     def get_absolute_url(self):
         return reverse('post-detail', args=[str(self.id)])
@@ -52,13 +59,17 @@ class Comment(TimeStampMixin):
     comment_created_at = models.DateTimeField(auto_now_add=True)
     comment_updated_at = models.DateTimeField(auto_now=True)
     commenter = models.ForeignKey('Commenter', on_delete=models.SET_DEFAULT, default=None, null=True)
-    post = models.ForeignKey('Post', on_delete=models.SET_DEFAULT, default=None, null=True)
+    
+    post = models.ForeignKey('Post', on_delete=models.SET_DEFAULT, default=None, null=True) #useless
+
+    post_connected =  models.ForeignKey(Post, related_name='comments', on_delete=models.CASCADE, default=None, null=True)
 
     class Meta:
         ordering = ['comment_created_at']
 
     def __str__(self):
-        return self.comment_title
+        return str(self.commenter) + ' :  ' + self.comment_title[:40]
+      
 
     # def get_absolute_url(self):
     #     return reverse('post-detail', args=[str(self.id)])

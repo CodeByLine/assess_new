@@ -54,36 +54,24 @@ class PostListView(generic.ListView):
         context.update(PostListView.context_vars)
         return context
 
-
 class PostDetailView(generic.DetailView):
     model = Post
-
+    
     def post_detail_view(request, primary_key):
         post = get_object_or_404(Post, pk=primary_key)
-        
+        post_comments = Comment.objects.filter(post.kwargs['pk'])
         return render(request, 'post_detail.html', context={'post': post})
-    
-    # post_comments = Comment.objects.filter(self.kwargs['pk'])
-    # num_post_comments = post_comments.count()
-
-    # context_vars = {
-    #     'post_comments' : post_comments,
-    #     'num_post_comments' : num_post_comments,
-    # }
-
-    context_object_name = 'post'
 
     def get_context_data(self, **kwargs):
-        context = super(PostDetailView, self).get_context_data(**kwargs)
-        context ['post_comments'] = Comment.objects.filter(post=self.kwargs['pk'])
-        return context
-    
+        data = super().get_context_data(**kwargs)
+        num_comments = Comment.objects.filter(
+            post_connected=self.get_object()).count()
+        post_connected = Comment.objects.filter(
+            post_connected=self.get_object()).order_by('-comment_created_at')
+        data['comments'] = post_connected
 
-    # def get_context_data(self, **kwargs):
-    #     context = super(PostDetailView, self).get_context_data(**kwargs)
-    #     context.update(PostDetailView.context_vars)
-    #     return context
-    
+        return data
+
 
 class AuthorListView(generic.ListView):
     model = Author
