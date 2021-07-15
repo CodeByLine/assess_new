@@ -60,6 +60,7 @@ class PostDetailView(generic.DetailView):
     def post_detail_view(request, primary_key):
         post = get_object_or_404(Post, pk=primary_key)
         post_comments = Comment.objects.filter(post.kwargs['pk'])
+        post_author = Post.objects.filter(post.author.kwargs['pk'])
         return render(request, 'post_detail.html', context={'post': post})
 
     def get_context_data(self, **kwargs):
@@ -97,8 +98,12 @@ class AuthorDetailView(generic.DetailView):
     model = Author
     context_object_name = 'author'
 
+    def author_detail_view(request, primary_key):
+        author = get_object_or_404(Author, pk=primary_key)
+        author_posts = Post.objects.filter(self.author.kwargs['pk'])
+        return render(request, 'author_detail.html')
+
     def get_context_data(self, **kwargs):
-        context = super(AuthorDetailView, self).get_context_data(**kwargs)
-        context ['author_posts'] = Post.objects.filter(author=self.kwargs['pk'])
+        context = super().get_context_data(**kwargs)
         return context
     

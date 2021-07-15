@@ -39,7 +39,7 @@ class TimeStampMixin(models.Model):
     class Meta:
         abstract = True
 
-class Author(TimeStampMixin):
+class Author(models.Model):
     # see https://stackoverflow.com/a/57971729/5965865
     author_first_name = models.CharField(max_length=30, help_text='Enter first name')
     author_last_name = models.CharField(max_length=30, help_text='Enter last name')
@@ -48,8 +48,8 @@ class Author(TimeStampMixin):
     def __str__(self):
         return self.author_username 
 
-    # def get_absolute_url(self):
-    #     return reverse('post-detail', args=[str(self.id)])
+    def get_absolute_url(self):
+        return reverse('author-detail', args=[str(self.id)])
 
 class Comment(TimeStampMixin):
      # see https://stackoverflow.com/a/57971729/5965865
