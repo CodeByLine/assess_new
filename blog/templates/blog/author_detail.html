@@ -8,11 +8,13 @@
 <br><br>
 Here are the posts by {{ author.author_first_name}} {{ author.author_last_name}}: <br><br>
 
-{{author_posts }}
-{{post_author }}
+
 <ul class="list_links">
 {% for post in author_posts %}
 <strong>{{ post.post_title }}</strong> <p class="small">(Posted: {{post.post_created_at}})</p>
 {% endfor %} <br>
 </ul>
+
+
+<p class="muted small">  Note: The variable "author_posts" is a queryset</p> 
 {% endblock %}

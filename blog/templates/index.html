@@ -10,8 +10,9 @@ And there are <strong>{{num_comments}}</strong> comment{{num_comments|pluralize:
 <hr>
 
 {% for post in post_list %}
+ 
 <ul class="list-links"> <li><strong> <a href="{{ post.get_absolute_url }}"> {{post.post_title}} </a></strong> by <a href="{{ post.author.get_absolute_url }}">{{ post.author }} </a> 
-Comment(s): {{ post.comment }} by  <a href="#">{{ post.comment.commenter }}</a></li></ul>
+Commented by {{ commenter }} </li></ul>
 {% endfor %}
 
 

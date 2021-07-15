@@ -100,10 +100,18 @@ class AuthorDetailView(generic.DetailView):
 
     def author_detail_view(request, primary_key):
         author = get_object_or_404(Author, pk=primary_key)
-        author_posts = Post.objects.filter(self.author.kwargs['pk'])
+        
         return render(request, 'author_detail.html')
+
+# below: Does nothing
+    # def get_author_posts(self, **kwargs):
+    #     author_posts = Post.objects.filter(self.author.kwargs['pk'])
+    #     return author_posts
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        author_posts = Post.objects.filter(author=self.kwargs['pk'])
+        context['author_posts'] = author_posts
         return context
     

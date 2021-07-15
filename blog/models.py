@@ -48,6 +48,10 @@ class Author(models.Model):
     def __str__(self):
         return self.author_username 
 
+    @property
+    def author_posts(self):
+        return Post.objects.filter(post_connected=self)
+
     def get_absolute_url(self):
         return reverse('author-detail', args=[str(self.id)])
 
@@ -72,8 +76,8 @@ class Comment(TimeStampMixin):
         return str(self.commenter) + ' :  ' + self.comment_title[:40]
       
 
-    # def get_absolute_url(self):
-    #     return reverse('post-detail', args=[str(self.id)])
+    def get_absolute_url(self):
+        return reverse('post-detail', args=[str(self.id)])
 
 class Commenter(models.Model):
     commenter_username = models.CharField(max_length=20)
