@@ -8,6 +8,7 @@ class Post(models.Model):
     post_created_at = models.DateTimeField(auto_now_add=True)
     post_updated_at = models.DateTimeField(auto_now=True)
 
+    # author = models.ForeignKey('Author', related_name='author', on_delete=models.SET_DEFAULT, default=None, null=True)
     author = models.ForeignKey('Author', on_delete=models.SET_DEFAULT, default=None, null=True)
 
     description = models.TextField(max_length=1000, help_text='Enter a brief description of this post')
@@ -47,10 +48,11 @@ class Author(models.Model):
 
     def __str__(self):
         return self.author_username 
-
-    @property
-    def author_posts(self):
-        return Post.objects.filter(post_connected=self)
+        
+    #useless
+    # @property
+    # def author_posts(self):
+    #     return Post.objects.filter(post_connected=self)
 
     def get_absolute_url(self):
         return reverse('author-detail', args=[str(self.id)])
