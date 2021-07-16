@@ -3,7 +3,9 @@ from blog.models import Post, Author, Commenter, Comment
 from django.views import generic
 from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
-
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required, permission_required
 
 def index(request):
     
@@ -32,6 +34,8 @@ def index(request):
     # Render the HTML template index.html with the data in the context variable
     return render(request, 'index.html', context=context)
 
+
+#####POST
 class PostListView(generic.ListView):
     model = Post
     post_list = Post.objects.all()
@@ -73,7 +77,7 @@ class PostDetailView(generic.DetailView):
 
         return data
 
-
+##### AUTHOR
 class AuthorListView(generic.ListView):
     model = Author
     template = 'author_list.html'
@@ -92,7 +96,6 @@ class AuthorListView(generic.ListView):
         context.update(AuthorListView.context_vars)
         return context
     
-
 
 class AuthorDetailView(generic.DetailView):
     model = Author
@@ -115,3 +118,40 @@ class AuthorDetailView(generic.DetailView):
         context['author_posts'] = author_posts
         return context
     
+
+##### CRUD-POST
+class PostCreateView(CreateView):
+# class PostCreate(LoginRequiredMixin, CreateView):
+    model = Post
+    fields = ['post_title', 'description']
+
+class PostUpdate(UpdateView):
+# class PostUpdate(LoginRequiredMixin, UpdateView):
+    model = Post
+    #fields = '__all__' # Not recommended (potential security issue if more fields added)
+
+class PostDelete(DeleteView):
+# class PostDelete(LoginRequiredMixin, DeleteView):
+    model = Post
+    success_url = reverse_lazy('blogs')
+
+
+##### CRUD-COMMENT
+class CommentCreate(CreateView):
+# class CommentCreate(LoginRequiredMixin, CreateView):
+    model = Comment
+    fields = ['comment_title', 'comment_text']
+
+
+class CommentUpdate(UpdateView):
+# class CommentUpdate(LoginRequiredMixin, UpdateView):
+    model = Comment
+    #fields = '__all__' # Not recommended (potential security issue if more fields added)
+
+class CommentDelete(DeleteView):
+# class CommentDelete(LoginRequiredMixin, DeleteView):
+    model = Comment
+    success_url = reverse_lazy('blogs')
+
+
+

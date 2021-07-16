@@ -11,7 +11,7 @@ Posts by {{ author.author_first_name}} {{ author.author_last_name}}: <br><br>
 
 <ul class="list_links">
 {% for post in author_posts %}
-<strong>{{ post.post_title }}</strong> <p class="small">(Posted: {{post.post_created_at}})</p>
+<strong> <a href="{{ post.get_absolute_url }}">{{ post.post_title }}</a> </strong> <p class="small">(Posted: {{post.post_created_at}})</p>
 {% endfor %} <br>
 </ul>
 
