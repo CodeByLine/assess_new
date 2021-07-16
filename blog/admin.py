@@ -3,8 +3,8 @@ from .models import Author, Post, Comment, Commenter
 
 
 admin.site.register(Post) 
-def __str__(self):
-    return self.title
+# def __str__(self):
+#     return self.title
 
 admin.site.register(Author)
 def __str__(self):
