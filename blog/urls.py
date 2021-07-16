@@ -6,7 +6,7 @@ urlpatterns = [
 ]
 
 urlpatterns += [
-    path('all/', views.PostListView.as_view(), name='all'),
+    path('blogs/', views.PostListView.as_view(), name='blogs'),
 
     path('blog/<int:pk>', views.PostDetailView.as_view(), name='post-detail')
     # path('blog/create/', views.AuthorCreate.as_view(), name='post-create'),
@@ -15,7 +15,7 @@ urlpatterns += [
 ]
 
 urlpatterns += [
-    path('authors/', views.AuthorListView.as_view(), name='authors'),
+    path('bloggers/', views.AuthorListView.as_view(), name='bloggers'),
     path('author/<int:pk>', views.AuthorDetailView.as_view(), name='author-detail')
 
 #     # path('author/create/', views.AuthorCreate.as_view(), name='author-create'),
