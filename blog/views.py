@@ -8,93 +8,96 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required, permission_required
 
 def index(request):
+    pass
     
-    post_list = Post.objects.all()
-    # Generate counts of some of the main objects
-    num_posts = Post.objects.all().count()
-    num_comments = Comment.objects.all().count()
+    # post_list = Post.objects.all()
+    # # Generate counts of some of the main objects
+    # num_posts = Post.objects.count()
+    # num_comments = Comment.objects.count()
 
-    # The 'all()' is implied by default.
-    num_authors = Author.objects.count()
-    num_commenters = Commenter.objects.count()
+    # # The 'all()' is implied by default.
+    # num_authors = Author.objects.count()
+    # num_commenters = Commenter.objects.count()
 
-    #SESSION
-    num_visits = request.session.get('num_visits', 1)
-    request.session['num_visits'] = num_visits + 1
+    # #SESSION
+    # num_visits = request.session.get('num_visits', 1)
+    # request.session['num_visits'] = num_visits + 1
 
     context = {
-        'num_posts': num_posts,
-        'num_comments': num_comments,
-        'num_authors': num_authors,
-        'num_commenters': num_commenters,
-        'num_visits': num_visits,  #SESSION
-        'post_list' : post_list,
+    #     'num_posts': num_posts,
+    #     'num_comments': num_comments,
+    #     'num_authors': num_authors,
+    #     'num_commenters': num_commenters,
+    #     'num_visits': num_visits,  #SESSION
+    #     'post_list' : post_list,
     }
 
-    # Render the HTML template index.html with the data in the context variable
+    # # Render the HTML template index.html with the data in the context variable
     return render(request, 'index.html', context=context)
 
 
 #####POST
 class PostListView(generic.ListView):
+    # pass
     model = Post
     post_list = Post.objects.all()
-    num_posts = Post.objects.all().count()
-    num_authors = Author.objects.count()
-    num_comments = Comment.objects.all().count()
-    num_commenters = Commenter.objects.count()
+    # num_posts = Post.objects.count()
+    # num_authors = Author.objects.count()
+    # num_comments = Comment.objects.all().count()
+    # num_commenters = Commenter.objects.count()
 
-    template_name = 'blog/post_list.html'  # Specify your own template name/location
+    # template_name = 'blog/post_list.html'  # Specify your own template name/location
 
-    context_vars = {
-        'num_posts': num_posts,
-        'num_authors': num_authors,
-        'post_list' : post_list,
-        'num_comments' : num_comments,
-        'num_commenters' : Commenter.objects.count(),
-    }
-    def get_context_data(self, **kwargs):
-        context = super(PostListView, self).get_context_data(**kwargs)
-        context.update(PostListView.context_vars)
-        return context
+    # context_vars = {
+    #     'num_posts': num_posts,
+    #     'num_authors': num_authors,
+    #     'post_list' : post_list,
+    #     'num_comments' : num_comments,
+    #     'num_commenters' : Commenter.objects.count(),
+    # }
+    # def get_context_data(self, **kwargs):
+    #     context = super(PostListView, self).get_context_data(**kwargs)
+    #     context.update(PostListView.context_vars)
+    #     return context
 
 class PostDetailView(generic.DetailView):
-    model = Post
-    
-    def post_detail_view(request, primary_key):
-        post = get_object_or_404(Post, pk=primary_key)
-        post_comments = Comment.objects.filter(post.kwargs['pk'])
-        post_author = Post.objects.filter(post.author.kwargs['pk'])
-        return render(request, 'post_detail.html', context={'post': post})
+    # model = Post
+    pass
+    # def post_detail_view(request, primary_key):
+    #     post = get_object_or_404(Post, pk=primary_key)
+    #     post_comments = Comment.objects.filter(post.kwargs['pk'])
+    #     post_author = Post.objects.filter(post.author.kwargs['pk'])
+    #     return render(request, 'post_detail.html', context={'post': post})
 
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        num_comments = Comment.objects.filter(
-            post_connected=self.get_object()).count()
-        post_connected = Comment.objects.filter(
-            post_connected=self.get_object()).order_by('-comment_created_at')
-        data['comments'] = post_connected
+    # def get_context_data(self, **kwargs):
+    #     data = super().get_context_data(**kwargs)
+    #     num_comments = Comment.objects.filter(
+    #         post_connected=self.get_object()).count()
+    #     post_connected = Comment.objects.filter(
+    #         post_connected=self.get_object()).order_by('-comment_created_at')
+    #     data['comments'] = post_connected
 
-        return data
+    #     return data
 
 ##### AUTHOR
 class AuthorListView(generic.ListView):
-    model = Author
-    template = 'author_list.html'
-    authors = Author.objects.all()
-    num_authors=Author.objects.count()
-    num_posts = Post.objects.count()
+    pass
+    # model = Author
+    # template = 'author_list.html'
+    # authors = Author.objects.all()
+    # num_authors=Author.objects.count()
+    # num_posts = Post.objects.count()
 
-    context_vars = {
-        'authors' : authors,
-        'num_authors' : num_authors,
-        'num_posts' : num_posts,
-    }
+    # context_vars = {
+    #     'authors' : authors,
+    #     'num_authors' : num_authors,
+    #     'num_posts' : num_posts,
+    # }
 
-    def get_context_data(self, **kwargs):
-        context = super(AuthorListView, self).get_context_data(**kwargs)
-        context.update(AuthorListView.context_vars)
-        return context
+    # def get_context_data(self, **kwargs):
+    #     context = super(AuthorListView, self).get_context_data(**kwargs)
+    #     context.update(AuthorListView.context_vars)
+    #     return context
     
 
 class AuthorDetailView(generic.DetailView):

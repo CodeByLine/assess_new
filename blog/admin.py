@@ -19,3 +19,4 @@ admin.site.register(Comment)
 admin.site.register(Commenter)
 #def __str__(self):
 #    return self.commenter_username
+
