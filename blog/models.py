@@ -1,19 +1,19 @@
 from django.db import models
 from django.urls import reverse
 from datetime import date
+from django.contrib.auth.models import User
+# from django.conf import settings
+from django.utils import timezone
 
 
 class Post(models.Model):
-    post_title = models.CharField(max_length=100, help_text='Enter a title')
+    post = models.TextField(max_length=1000)
+    description = models.TextField(max_length=500)
+    post_title = models.CharField(max_length=100)
     post_created_at = models.DateTimeField(auto_now_add=True)
     post_updated_at = models.DateTimeField(auto_now=True)
-
-    author = models.ForeignKey('Author', related_name='posts', on_delete=models.SET_DEFAULT, default=None, null=True)
-    # author = models.ForeignKey('Author', on_delete=models.SET_DEFAULT, default=None, null=True)
-
-    description = models.TextField(max_length=1000, help_text='Enter a brief description of this post')
-
-
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    
     @property
     def num_comments(self):
         return Comment.objects.filter(post_connected=self).count()
@@ -25,13 +25,6 @@ class Post(models.Model):
     def __str__(self):
         return f'{self.author or ""} – {self.post_title[:40]}'
 
-    # def __str__(self):
-        # return (self.post_title[:40])
-
-        # return self.author.author_username + ', ' + self.post_title[:40]
-        # return self.author or '' +  self.post_title[:40]
-        # return (self.author) or ('' +  self.post_title[:40])
-
     def get_absolute_url(self):
         return reverse('post-detail', args=[str(self.id)])
 
@@ -39,42 +32,41 @@ class Post(models.Model):
     class Meta:
         ordering = ['-post_created_at']
     
-class TimeStampMixin(models.Model):
-    # see https://stackoverflow.com/a/57971729/5965865
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+# class TimeStampMixin(models.Model):
+#     # see https://stackoverflow.com/a/57971729/5965865
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
-        abstract = True
+#     class Meta:
+#         abstract = True
 
-class Author(models.Model):
-    # see https://stackoverflow.com/a/57971729/5965865
-    author_first_name = models.CharField(max_length=30, help_text='Enter first name')
-    author_last_name = models.CharField(max_length=30, help_text='Enter last name')
-    author_username = models.CharField(max_length=20)
+# class Author(models.Model):
+#     # see https://stackoverflow.com/a/57971729/5965865
+#     author = 
+#     title = models.CharField(max_length=100)
+#     content = models.TextField()
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     updated_at = models.DateTimeField(auto_now=True)
+#     published_at = models.DateTimeField(blank = True, null = True)
 
-    def __str__(self):
-        return self.author_username 
-        
-    #useless
-    # @property
-    # def author_posts(self):
-    #     return Post.objects.filter(post_connected=self)
+#     def publish(self):
+#         self.published_at = timezone.now()
+#         self.save()
 
-    def get_absolute_url(self):
-        return reverse('author-detail', args=[str(self.id)])
+#     def __str__(self):
+#         return self.title
 
-class Comment(TimeStampMixin):
-     # see https://stackoverflow.com/a/57971729/5965865
+#     def get_absolute_url(self):
+#         return reverse('author-detail', args=[str(self.id)])
 
-    comment_title = models.CharField(max_length=100, help_text='Enter a title')
-    comment_text = models.TextField(max_length=1000, help_text='Write your comment here')
+class Comment(models.Model):
+     # also see https://stackoverflow.com/a/57971729/5965865
+
+    comment_title = models.CharField(max_length=100)
+    comment = models.TextField(max_length=1000)
     comment_created_at = models.DateTimeField(auto_now_add=True)
     comment_updated_at = models.DateTimeField(auto_now=True)
-    commenter = models.ForeignKey('Commenter', on_delete=models.SET_DEFAULT, default=None, null=True)
-
-    #useless
-    #post = models.ForeignKey('Post', on_delete=models.SET_DEFAULT, default=None, null=True) #useless
+    commenter = models.ForeignKey(User, on_delete=models.CASCADE)
 
     post_connected =  models.ForeignKey(Post, related_name='comments', on_delete=models.CASCADE, default=None, null=True)
 
@@ -87,11 +79,5 @@ class Comment(TimeStampMixin):
 
     def get_absolute_url(self):
         return reverse('post-detail', args=[str(self.id)])
-
-class Commenter(models.Model):
-    commenter_username = models.CharField(max_length=20)
-    
-    def __str__(self):
-        return self.commenter_username
 
 

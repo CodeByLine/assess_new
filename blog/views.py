@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from blog.models import Post, Author, Commenter, Comment
+from blog.models import Post
 from django.views import generic
 from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
@@ -38,9 +38,9 @@ def index(request):
 
 #####POST
 class PostListView(generic.ListView):
-    # pass
+    pass
     model = Post
-    post_list = Post.objects.all()
+    # post_list = Post.objects.all()
     # num_posts = Post.objects.count()
     # num_authors = Author.objects.count()
     # num_comments = Comment.objects.all().count()
@@ -61,8 +61,8 @@ class PostListView(generic.ListView):
     #     return context
 
 class PostDetailView(generic.DetailView):
-    # model = Post
     pass
+    model = Post
     # def post_detail_view(request, primary_key):
     #     post = get_object_or_404(Post, pk=primary_key)
     #     post_comments = Comment.objects.filter(post.kwargs['pk'])
@@ -101,13 +101,14 @@ class AuthorListView(generic.ListView):
     
 
 class AuthorDetailView(generic.DetailView):
-    model = Author
-    context_object_name = 'author'
+    pass
+    # model = Author
+    # context_object_name = 'author'
 
-    def author_detail_view(request, primary_key):
-        author = get_object_or_404(Author, pk=primary_key)
+    # def author_detail_view(request, primary_key):
+    #     author = get_object_or_404(Author, pk=primary_key)
         
-        return render(request, 'author_detail.html')
+    #     return render(request, 'author_detail.html')
 
 # below: Does nothing
     # def get_author_posts(self, **kwargs):
@@ -115,18 +116,20 @@ class AuthorDetailView(generic.DetailView):
     #     return author_posts
 
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        author_posts = Post.objects.filter(author=self.kwargs['pk'])
-        context['author_posts'] = author_posts
-        return context
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     author_posts = Post.objects.filter(author=self.kwargs['pk'])
+    #     context['author_posts'] = author_posts
+    #     return context
     
 
 ##### CRUD-POST
 class PostCreateView(CreateView):
 # class PostCreate(LoginRequiredMixin, CreateView):
+    pass
     model = Post
-    fields = ['post_title', 'description']
+    # fields = ['post_title', 'description']
+    # author = request.user
 
 class PostUpdate(UpdateView):
 # class PostUpdate(LoginRequiredMixin, UpdateView):
@@ -140,21 +143,21 @@ class PostDelete(DeleteView):
 
 
 ##### CRUD-COMMENT
-class CommentCreate(CreateView):
+# class CommentCreate(CreateView):
 # class CommentCreate(LoginRequiredMixin, CreateView):
-    model = Comment
-    fields = ['comment_title', 'comment_text']
+    # model = Comment
+    # fields = ['comment_title', 'comment_text']
 
 
-class CommentUpdate(UpdateView):
+# class CommentUpdate(UpdateView):
 # class CommentUpdate(LoginRequiredMixin, UpdateView):
-    model = Comment
+    # model = Comment
     #fields = '__all__' # Not recommended (potential security issue if more fields added)
 
-class CommentDelete(DeleteView):
+# class CommentDelete(DeleteView):
 # class CommentDelete(LoginRequiredMixin, DeleteView):
-    model = Comment
-    success_url = reverse_lazy('blogs')
+    # model = Comment
+    # success_url = reverse_lazy('blogs')
 
 
 
