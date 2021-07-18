@@ -8,11 +8,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required, permission_required
 
 def index(request):
-    pass
-    
-    # post_list = Post.objects.all()
-    # # Generate counts of some of the main objects
-    # num_posts = Post.objects.count()
+    # pass
+    post_list = Post.objects.all()
+    num_posts = Post.objects.count()
     # num_comments = Comment.objects.count()
 
     # # The 'all()' is implied by default.
@@ -24,12 +22,12 @@ def index(request):
     # request.session['num_visits'] = num_visits + 1
 
     context = {
-    #     'num_posts': num_posts,
+        'num_posts': num_posts,
     #     'num_comments': num_comments,
     #     'num_authors': num_authors,
     #     'num_commenters': num_commenters,
     #     'num_visits': num_visits,  #SESSION
-    #     'post_list' : post_list,
+        'post_list' : post_list,
     }
 
     # # Render the HTML template index.html with the data in the context variable
@@ -40,7 +38,7 @@ def index(request):
 class PostListView(generic.ListView):
     pass
     model = Post
-    # post_list = Post.objects.all()
+    post_list = Post.objects.all()
     # num_posts = Post.objects.count()
     # num_authors = Author.objects.count()
     # num_comments = Comment.objects.all().count()
@@ -132,12 +130,14 @@ class PostCreateView(CreateView):
     # author = request.user
 
 class PostUpdate(UpdateView):
+    pass
 # class PostUpdate(LoginRequiredMixin, UpdateView):
     model = Post
     #fields = '__all__' # Not recommended (potential security issue if more fields added)
 
 class PostDelete(DeleteView):
 # class PostDelete(LoginRequiredMixin, DeleteView):
+    pass
     model = Post
     success_url = reverse_lazy('blogs')
 
