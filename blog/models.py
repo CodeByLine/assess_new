@@ -21,7 +21,7 @@ class Post(models.Model):
 # from django.conf import settings
 
     author = models.ForeignKey(
-      settings.AUTH_USER_MODEL, 
+      settings.AUTH_USER_MODEL, related_name="posts", 
       on_delete=models.CASCADE
     )
     
@@ -36,12 +36,17 @@ class Post(models.Model):
     def __str__(self):
         return f'{self.author or ""} – {self.post_title[:40]}'
 
-    # def get_absolute_url(self):
-    #     return reverse('post-detail', args=[str(self.id)])
+    def get_absolute_url(self):
+        return reverse('post-detail', args=[str(self.id)])
 
     # Metadata
     class Meta:
         ordering = ['-post_created_at']
+    
+    def get_author():
+        a = CustomUser()
+        name = a.get_username() # author instance
+        # https://stackoverflow.com/questions/58891302/django-customuser-function
     
 # class TimeStampMixin(models.Model):
 #     # see https://stackoverflow.com/a/57971729/5965865

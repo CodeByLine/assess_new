@@ -4,7 +4,7 @@
 {% block content %}
 
 <h1>Index</h1>
-This blog has a total of <strong>{{num_posts}}</strong>  post{{num_posts|pluralize:"s"}} by <strong>{{ all_authors}}</strong> author{{all_authors|pluralize:"s"}}. <br>
+This blog has a total of <strong>{{num_posts}}</strong>  post{{num_posts|pluralize:"s"}} by <strong>{{ all_authors}}</strong> author{{num_author|pluralize:"s"}}. <br>
 
 And there {{num_comments|pluralize:"is,are"}} a total of <strong>{{num_comments}}</strong> comment{{num_comments|pluralize:"s"}} 
 

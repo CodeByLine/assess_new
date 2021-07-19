@@ -7,6 +7,9 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required, permission_required
 from django.db.models import Count
+from django.contrib.auth.models import User
+from django.conf import settings
+from accounts.models import CustomUser
 
 def index(request):
     # pass
@@ -14,7 +17,7 @@ def index(request):
     num_posts = Post.objects.count()
     num_comments = Comment.objects.count()
     comments = Comment.objects.all()
-    
+    num_authors = CustomUser.objects.filter(posts__isnull=False).count()
     # # The 'all()' is implied by default.
     # num_authors = Author.objects.count()
     # num_commenters = Commenter.objects.count()
@@ -27,7 +30,7 @@ def index(request):
     context = {
         'num_posts': num_posts,
         'num_comments': num_comments,
-    #     'num_authors': num_authors,
+        'num_authors': num_authors,
     #     'num_commenters': num_commenters,
     #     'num_visits': num_visits,  #SESSION
         'post_list' : post_list,
@@ -64,13 +67,13 @@ class PostListView(generic.ListView):
     #     return context
 
 class PostDetailView(generic.DetailView):
-    pass
+    # pass
     model = Post
-    # def post_detail_view(request, primary_key):
-    #     post = get_object_or_404(Post, pk=primary_key)
-    #     post_comments = Comment.objects.filter(post.kwargs['pk'])
-    #     post_author = Post.objects.filter(post.author.kwargs['pk'])
-    #     return render(request, 'post_detail.html', context={'post': post})
+    def post_detail_view(request, primary_key):
+        post = get_object_or_404(Post, pk=primary_key)
+        post_comments = Comment.objects.filter(post.kwargs['pk'])
+        post_author = Post.objects.filter(post.author.kwargs['pk'])
+        return render(request, 'post_detail.html', context={'post': post})
 
     # def get_context_data(self, **kwargs):
     #     data = super().get_context_data(**kwargs)
@@ -84,14 +87,16 @@ class PostDetailView(generic.DetailView):
 
 ##### AUTHOR
 class AuthorListView(generic.ListView):
-    pass
+#     pass
+    model = CustomUser
     # model = Author
-    # template = 'author_list.html'
-    # authors = Author.objects.all()
+    template = 'blog/author_list.html'
+    authors = CustomUser.objects.all()
     # num_authors=Author.objects.count()
     # num_posts = Post.objects.count()
-
-    # context_vars = {
+    # def get_authors(self, **kwargs):
+    #     authors = CustomUser.objects.filter()
+    # # context_vars = {
     #     'authors' : authors,
     #     'num_authors' : num_authors,
     #     'num_posts' : num_posts,

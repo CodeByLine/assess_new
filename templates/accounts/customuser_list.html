@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}<title>CustomUser List</title>{% endblock %}
+{% block content %}
+  <h1>Author List</h1>
+  {{authors}}
+  There are {{num_authors}} contributing authors to this blogging platform and a total of {{num_posts }} posts.
+  {% if authors %}
+  <ul>
+    {% for author in authors %}
+      <li>
+        <a href="{{ author.get_absolute_url }}">{{author.author_username}}</a> 
+      </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+    <p>There are no authors in the list.</p>
+  {% endif %} 
+
+  {% endblock %}
