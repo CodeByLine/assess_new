@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
 )
@@ -49,4 +50,7 @@ class User(AbstractBaseUser):
     def is_admin(self):
         "Is the user a admin member?"
         return self.admin
+
+    def get_absolute_url(self):
+        return reverse('author-detail', args=[str(self.id)])
 

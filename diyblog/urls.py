@@ -14,3 +14,8 @@ urlpatterns += [
     path('accounts/', include('accounts.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
 ]
+
+# urlpatterns += [
+#     path('bloggers/', views.AuthorListView.as_view(), name='bloggers'),
+#     path('author/<int:pk>', views.AuthorDetailView.as_view(), name='author-detail')
+# ]

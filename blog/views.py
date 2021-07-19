@@ -87,41 +87,38 @@ class PostDetailView(generic.DetailView):
 
 ##### AUTHOR
 class AuthorListView(generic.ListView):
-    pass
-    # model = CustomUser
+    # pass
+    model = User
     # model = Author
-    # template = 'blog/author_list.html'
-    # authors = CustomUser.objects.all()
-    # num_authors=Author.objects.count()
+    template = 'blog/author_list.html'
+    authors = User.objects.all()
+    num_authors=User.objects.count()
     # num_posts = Post.objects.count()
     # def get_authors(self, **kwargs):
-    #     authors = CustomUser.objects.filter()
-    # # context_vars = {
-    #     'authors' : authors,
+    #     authors = User.objects.filter()
+    context_vars = {
+        'authors' : authors,
     #     'num_authors' : num_authors,
     #     'num_posts' : num_posts,
-    # }
+    }
 
-    # def get_context_data(self, **kwargs):
-    #     context = super(AuthorListView, self).get_context_data(**kwargs)
-    #     context.update(AuthorListView.context_vars)
-    #     return context
+    def get_context_data(self, **kwargs):
+        context = super(AuthorListView, self).get_context_data(**kwargs)
+        context.update(AuthorListView.context_vars)
+        return context
     
 
+
 class AuthorDetailView(generic.DetailView):
-    pass
-    # model = Author
-    # context_object_name = 'author'
+    # view goes to /auth/user_detail
+    # pass
+    model = User
+    context_object_name = 'author'
 
-    # def author_detail_view(request, primary_key):
-    #     author = get_object_or_404(Author, pk=primary_key)
-        
-    #     return render(request, 'author_detail.html')
+    def get_queryset(self):
+        """Return queryset """
+        return User.objects.order_by('id')
 
-# below: Does nothing
-    # def get_author_posts(self, **kwargs):
-    #     author_posts = Post.objects.filter(self.author.kwargs['pk'])
-    #     return author_posts
 
 
     # def get_context_data(self, **kwargs):
