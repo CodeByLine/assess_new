@@ -69,6 +69,8 @@ class PostListView(generic.ListView):
 class PostDetailView(generic.DetailView):
     # pass
     model = Post
+
+
     def post_detail_view(request, primary_key):
         post = get_object_or_404(Post, pk=primary_key)
         post_comments = Comment.objects.filter(post.kwargs['pk'])

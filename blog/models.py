@@ -84,17 +84,11 @@ class Comment(models.Model):
     comment = models.TextField(max_length=1000)
     comment_created_at = models.DateTimeField(auto_now_add=True)
     comment_updated_at = models.DateTimeField(auto_now=True)
-    # commenter = models.ForeignKey(User, on_delete=models.CASCADE)
-
-    # https://learndjango.com/tutorials/django-best-practices-referencing-user-model
-# from django.contrib.auth.models import User
-# from django.conf import settings
 
     commenter = models.ForeignKey(
       settings.AUTH_USER_MODEL, 
       on_delete=models.CASCADE
     )
-
 
     post_connected =  models.ForeignKey(Post, related_name='posts', on_delete=models.CASCADE, default=None, null=True)
 

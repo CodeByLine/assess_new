@@ -15,22 +15,13 @@
 
 <h2>comments:</h2>
 
-{% if comments %}
-  <strong class="text-secondary">{{ object.num_comments }} Comment{{ object.num_comments|pluralize }}</strong>
-  <hr>
-  <ul>
-    {% for comment in comments %}
-    <li>           
-     <div>
-        <span>
-          <strong class="text-info">{{ comment.commenter }} </strong><br>
+{% for comment in post.post_comments %}
+Comment: {{ comment }}
+<hr>
+commenter: {{comment.commenter}}  <br>
+comment title: {{comment.comment_title}} <br>
+comment: {{comment.comment }}
 
-          <strong class="text-success">{{ comment.comment_title }} </strong><br>
-          <p>{{ comment.comment_text }}</p>
-          <small class="text-muted">Commented on: {{ comment.comment_created_at }} |  Updated on: {{ comment.comment_updated_at }}</small>
-        </span>
-    {% endfor %}
-    {% endif %}
-      </ul>
+{% endfor %}
 
 {% endblock %}
