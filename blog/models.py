@@ -6,6 +6,7 @@ from django.conf import settings
 from django.utils import timezone
 from django.db.models import Count
 
+User = settings.AUTH_USER_MODEL
 
 class Post(models.Model):
     post = models.TextField(max_length=1000)
@@ -13,6 +14,7 @@ class Post(models.Model):
     description = models.TextField(max_length=500)
     post_created_at = models.DateTimeField(auto_now_add=True)
     post_updated_at = models.DateTimeField(auto_now=True)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     
     # author = models.ForeignKey(User, related_name="author", on_delete=models.CASCADE)
 
@@ -20,10 +22,10 @@ class Post(models.Model):
 # from django.contrib.auth.models import User
 # from django.conf import settings
 
-    author = models.ForeignKey(
-      settings.AUTH_USER_MODEL, related_name="posts", 
-      on_delete=models.CASCADE
-    )
+    # author = models.ForeignKey(
+    #   settings.AUTH_USER_MODEL, related_name="posts", 
+    #   on_delete=models.CASCADE
+    # )
     
     # @property
     # def num_comments(self):
@@ -43,9 +45,9 @@ class Post(models.Model):
     class Meta:
         ordering = ['-post_created_at']
     
-    def get_author():
-        a = CustomUser()
-        name = a.get_username() # author instance
+    # def get_author():
+    #     a = CustomUser()
+    #     name = a.get_username() # author instance
         # https://stackoverflow.com/questions/58891302/django-customuser-function
     
 # class TimeStampMixin(models.Model):

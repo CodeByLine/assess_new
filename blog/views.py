@@ -9,15 +9,15 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.db.models import Count
 from django.contrib.auth.models import User
 from django.conf import settings
-from accounts.models import CustomUser
+# from accounts.models import CustomUser
 
 def index(request):
     # pass
     post_list = Post.objects.all()
     num_posts = Post.objects.count()
-    num_comments = Comment.objects.count()
-    comments = Comment.objects.all()
-    num_authors = CustomUser.objects.filter(posts__isnull=False).count()
+    # num_comments = Comment.objects.count()
+    # comments = Comment.objects.all()
+
     # # The 'all()' is implied by default.
     # num_authors = Author.objects.count()
     # num_commenters = Commenter.objects.count()
@@ -29,12 +29,12 @@ def index(request):
     
     context = {
         'num_posts': num_posts,
-        'num_comments': num_comments,
-        'num_authors': num_authors,
+        # 'num_comments': num_comments,
+        # 'num_authors': num_authors,
     #     'num_commenters': num_commenters,
     #     'num_visits': num_visits,  #SESSION
         'post_list' : post_list,
-        'comments' : comments,
+        # 'comments' : comments,
     }
 
     # # Render the HTML template index.html with the data in the context variable
@@ -87,11 +87,11 @@ class PostDetailView(generic.DetailView):
 
 ##### AUTHOR
 class AuthorListView(generic.ListView):
-#     pass
-    model = CustomUser
+    pass
+    # model = CustomUser
     # model = Author
-    template = 'blog/author_list.html'
-    authors = CustomUser.objects.all()
+    # template = 'blog/author_list.html'
+    # authors = CustomUser.objects.all()
     # num_authors=Author.objects.count()
     # num_posts = Post.objects.count()
     # def get_authors(self, **kwargs):

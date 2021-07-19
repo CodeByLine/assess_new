@@ -1,0 +1,24 @@
+ {% extends 'base.html' %}
+
+
+{% block content %}
+
+<h1>Index</h1>
+This blog has a total of <strong>{{num_posts}}</strong>  post{{num_posts|pluralize:"s"}} by <strong>{{ all_authors}}</strong> author{{num_author|pluralize:"s"}}. <br>
+
+And there {{num_comments|pluralize:"is,are"}} a total of <strong>{{num_comments}}</strong> comment{{num_comments|pluralize:"s"}} 
+
+{% for post in post_list %}
+ 
+<ul class="list-links"> <li><strong> <a href="{{ post.get_absolute_url }}"> {{post.post_title}} </a></strong> - By {{post.author}} - {{ post.post_created_at}}</li><br>
+</ul>
+{% endfor %}
+
+{%  for p in post_list %}
+    author is: {{p.author}} <br>
+{% endfor %}
+
+<p>visitor => blabber1234</p>
+<p>hunter => pounce2021</p>
+
+{% endblock %}

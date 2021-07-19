@@ -43,8 +43,8 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
 ]
 
-# https://learndjango.com/tutorials/django-custom-user-model
-AUTH_USER_MODEL = 'accounts.CustomUser'
+# https://www.codingforentrepreneurs.com/blog/how-to-create-a-custom-django-user-model
+# AUTH_USER_MODEL = 'accounts.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
