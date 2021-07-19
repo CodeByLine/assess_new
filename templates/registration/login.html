@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<h2>Log In 1</h2>
+<h2>Log In 1: Form.as_p</h2>
 <form method="post">
   {% csrf_token %}
   {{ form.as_p }}
@@ -13,7 +13,7 @@
 <p>visitor => blabber1234</p>
 <p>hunter => pounce2021</p>
 <hr>
-<h2>Log In 2</h2>
+<h2>Log In 2: if user.is_authenticated</h2>
   {% if form.errors %}
     <p>Your username and password didn't match. Please try again.</p>
   {% endif %}
