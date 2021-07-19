@@ -1,18 +1,20 @@
 from django.shortcuts import render, get_object_or_404
-from blog.models import Post
+from blog.models import Post, Comment
 from django.views import generic
 from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required, permission_required
+from django.db.models import Count
 
 def index(request):
     # pass
     post_list = Post.objects.all()
     num_posts = Post.objects.count()
-    # num_comments = Comment.objects.count()
-
+    num_comments = Comment.objects.count()
+    comments = Comment.objects.all()
+    
     # # The 'all()' is implied by default.
     # num_authors = Author.objects.count()
     # num_commenters = Commenter.objects.count()
@@ -21,13 +23,15 @@ def index(request):
     # num_visits = request.session.get('num_visits', 1)
     # request.session['num_visits'] = num_visits + 1
 
+    
     context = {
         'num_posts': num_posts,
-    #     'num_comments': num_comments,
+        'num_comments': num_comments,
     #     'num_authors': num_authors,
     #     'num_commenters': num_commenters,
     #     'num_visits': num_visits,  #SESSION
         'post_list' : post_list,
+        'comments' : comments,
     }
 
     # # Render the HTML template index.html with the data in the context variable
@@ -39,6 +43,7 @@ class PostListView(generic.ListView):
     pass
     model = Post
     post_list = Post.objects.all()
+   
     # num_posts = Post.objects.count()
     # num_authors = Author.objects.count()
     # num_comments = Comment.objects.all().count()
