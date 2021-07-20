@@ -1,0 +1,55 @@
+How I got the author link to work on the "post_detail.html" page so it goes to the "auth/author_detail.html" page:
+
+'blog/post_detail.html':
+
+### blog/post_detail.html
+# key change-added: <a href="{% url 'author-detail' post.author.id %}">
+
+<p>Author:<a href="{% url 'author-detail' post.author.id %}"> {{ post.author }}</a></p>
+
+### blog/views.py => AuthorDetailView
+# key change: added 'auth/' to the template)
+
+class AuthorDetailView(generic.DetailView):
+    # view goes to /auth/user_detail
+    # pass
+    model = User
+    context_object_name = 'author'
+    template = 'auth/user_detail.html'  
+
+
+
+### blog/PostDetailView
+
+class PostDetailView(generic.DetailView):
+    model = Post
+
+    def post_detail_view(request, primary_key):
+        post = get_object_or_404(Post, pk=primary_key)
+        post.author = User.objects.filter(id=post.author.id)
+        return render(request, 'post_detail.html', context={'post': post})
+
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)       
+        return data
+
+### blog/models.py
+
+class Post(models.Model):
+    post = models.TextField(max_length=1000)
+    ...
+    author = models.ForeignKey(User, related_name="posts", on_delete=models.CASCADE)
+
+
+### accounts/models.py 
+
+class User(AbstractBaseUser):
+    email = models.EmailField(
+        verbose_name='email address',
+        max_length=255,
+        unique=True,
+    )
+
+    def __str__(self):
+        return self.email
