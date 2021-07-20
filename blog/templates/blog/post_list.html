@@ -12,7 +12,10 @@
 {% for post in post_list %}
  
 <ul class="list-links"> <li><strong> <a href="{{ post.get_absolute_url }}"> {{post.post_title}} </a></strong> - By {{post.author}} - {{ post.post_created_at}}</li></ul>
+
 {% endfor %}
+
+
 
 
 {% endblock %}

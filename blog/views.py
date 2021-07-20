@@ -54,17 +54,17 @@ class PostListView(generic.ListView):
 
     # template_name = 'blog/post_list.html'  # Specify your own template name/location
 
-    # context_vars = {
+    context_vars = {
     #     'num_posts': num_posts,
     #     'num_authors': num_authors,
-    #     'post_list' : post_list,
+        'post_list' : post_list,
     #     'num_comments' : num_comments,
     #     'num_commenters' : Commenter.objects.count(),
-    # }
-    # def get_context_data(self, **kwargs):
-    #     context = super(PostListView, self).get_context_data(**kwargs)
-    #     context.update(PostListView.context_vars)
-    #     return context
+    }
+    def get_context_data(self, **kwargs):
+        context = super(PostListView, self).get_context_data(**kwargs)
+        context.update(PostListView.context_vars)
+        return context
 
 class PostDetailView(generic.DetailView):
     # pass
@@ -73,26 +73,26 @@ class PostDetailView(generic.DetailView):
 
     def post_detail_view(request, primary_key):
         post = get_object_or_404(Post, pk=primary_key)
-        post_comments = Comment.objects.filter(post.kwargs['pk'])
-        post_author = Post.objects.filter(post.author.kwargs['pk'])
+        # post_comments = Comment.objects.filter(post.kwargs['pk'])
+        post.author = User.objects.filter(id=post.author.id)
         return render(request, 'post_detail.html', context={'post': post})
 
-    # def get_context_data(self, **kwargs):
-    #     data = super().get_context_data(**kwargs)
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
     #     num_comments = Comment.objects.filter(
-    #         post_connected=self.get_object()).count()
+    #         post_connected=self.get_object)).count()
     #     post_connected = Comment.objects.filter(
     #         post_connected=self.get_object()).order_by('-comment_created_at')
     #     data['comments'] = post_connected
-
-    #     return data
+        
+        return data
 
 ##### AUTHOR
 class AuthorListView(generic.ListView):
     # pass
     model = User
-    # model = Author
-    template = 'blog/author_list.html'
+    template = 'auth/user_list.html'
     authors = User.objects.all()
     num_authors=User.objects.count()
     # num_posts = Post.objects.count()
@@ -100,16 +100,13 @@ class AuthorListView(generic.ListView):
     #     authors = User.objects.filter()
     context_vars = {
         'authors' : authors,
-    #     'num_authors' : num_authors,
-    #     'num_posts' : num_posts,
+
     }
 
     def get_context_data(self, **kwargs):
         context = super(AuthorListView, self).get_context_data(**kwargs)
         context.update(AuthorListView.context_vars)
         return context
-    
-
 
 class AuthorDetailView(generic.DetailView):
     # view goes to /auth/user_detail
@@ -117,34 +114,34 @@ class AuthorDetailView(generic.DetailView):
     model = User
     context_object_name = 'author'
 
-    def get_queryset(self):
-        """Return queryset """
-        return User.objects.order_by('id')
+    # def get_queryset(self, **kwargs):
+    #     """Return queryset """
+    #     return User.objects.order_by('id')
 
 
 
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     author_posts = Post.objects.filter(author=self.kwargs['pk'])
-    #     context['author_posts'] = author_posts
-    #     return context
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        author_posts = Post.objects.filter(author=self.kwargs['pk'])
+        context['author_posts'] = author_posts
+        return context
     
 
 ##### CRUD-POST
-class PostCreateView(CreateView):
+class PostCreateView(generic.CreateView):
 # class PostCreate(LoginRequiredMixin, CreateView):
     pass
     model = Post
     # fields = ['post_title', 'description']
     # author = request.user
 
-class PostUpdate(UpdateView):
+class PostUpdate(generic.UpdateView):
     pass
 # class PostUpdate(LoginRequiredMixin, UpdateView):
     model = Post
     #fields = '__all__' # Not recommended (potential security issue if more fields added)
 
-class PostDelete(DeleteView):
+class PostDelete(generic.DeleteView):
 # class PostDelete(LoginRequiredMixin, DeleteView):
     pass
     model = Post
@@ -152,18 +149,18 @@ class PostDelete(DeleteView):
 
 
 ##### CRUD-COMMENT
-# class CommentCreate(CreateView):
+# class CommentCreate(generic.CreateView):
 # class CommentCreate(LoginRequiredMixin, CreateView):
     # model = Comment
     # fields = ['comment_title', 'comment_text']
 
 
-# class CommentUpdate(UpdateView):
+# class CommentUpdate(generic.UpdateView):
 # class CommentUpdate(LoginRequiredMixin, UpdateView):
     # model = Comment
     #fields = '__all__' # Not recommended (potential security issue if more fields added)
 
-# class CommentDelete(DeleteView):
+# class CommentDelete(generic.DeleteView):
 # class CommentDelete(LoginRequiredMixin, DeleteView):
     # model = Comment
     # success_url = reverse_lazy('blogs')

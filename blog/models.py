@@ -14,7 +14,7 @@ class Post(models.Model):
     description = models.TextField(max_length=500)
     post_created_at = models.DateTimeField(auto_now_add=True)
     post_updated_at = models.DateTimeField(auto_now=True)
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, related_name="posts", on_delete=models.CASCADE)
     
     # author = models.ForeignKey(User, related_name="author", on_delete=models.CASCADE)
 
@@ -38,8 +38,11 @@ class Post(models.Model):
     def __str__(self):
         return f'{self.author or ""} – {self.post_title[:40]}'
 
+    # def get_absolute_url(self):
+    #     return reverse('post-detail', args=[str(self.id)])
+
     def get_absolute_url(self):
-        return reverse('post-detail', args=[str(self.id)])
+        return "/blog/{}/".format(self.pk)
 
     # Metadata
     class Meta:

@@ -51,6 +51,6 @@ class User(AbstractBaseUser):
         "Is the user a admin member?"
         return self.admin
 
-    def get_absolute_url(self):
-        return reverse('author-detail', args=[str(self.id)])
+    # def get_absolute_url(self):
+    #     return reverse('author-detail', args=[str(self.id)])
 
