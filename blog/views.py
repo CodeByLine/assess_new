@@ -113,6 +113,7 @@ class AuthorDetailView(generic.DetailView):
     # pass
     model = User
     context_object_name = 'author'
+    template = 'auth/user_detail.html'
 
     # def get_queryset(self, **kwargs):
     #     """Return queryset """
@@ -122,8 +123,8 @@ class AuthorDetailView(generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        author_posts = Post.objects.filter(author=self.kwargs['pk'])
-        context['author_posts'] = author_posts
+        # author_posts = Post.objects.filter(author=self.kwargs['pk'])
+        context['author'] = self.kwargs.get("id")
         return context
     
 

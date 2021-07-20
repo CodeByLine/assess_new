@@ -8,7 +8,7 @@
 <h1>{{ post.post_title }}</h1>
 
 <p class="small"><strong> Created on: </strong><em>{{ post.post_created_at }} </em> </p>
-<p><strong>Author: </strong><a href="{{ post.author.get_absolute_url }}"> {{ post.author }}</a></p>
+<p><strong>Author: </strong><a href="{% url 'author-detail' post.author.id %}"> {{ post.author }}</a></p>
 
 
 <p><strong>Description: </strong>{{ post.description }}</p>
