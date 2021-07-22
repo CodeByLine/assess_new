@@ -13,18 +13,20 @@
 
 <p><strong>Description: </strong>{{ post.description }}</p>
 <p><strong>Post: </strong></p>
-{{post.post}}
+<p>{{post.post}}</p>
 <br>
+<br>
+
+<h4> There {{post.num_comments|pluralize:"is,are"}} {{post.num_comments}} comment{{ post.num_comments|pluralize:"s" }} on this post:</h4>
 <hr>
 
-<h4>Comments:</h4>
+<!-- {{post.post_comments}} <br> -->
 
 {% for comment in post.post_comments %}
-Comment: {{ comment }}
-<hr style="width: 500px;">
-commenter: {{comment.commenter}}  <br>
-comment title: {{comment.comment_title}} <br>
-comment: {{comment.comment }}
+<!-- Comment: {{ post.comments }} <br> -->
+<strong>Commenter: </strong>{{comment.commenter}}  <br>
+<strong>Comment title: </strong>{{comment.comment_title}} <br>
+<strong>Comment: </strong>{{comment.comment }} <br><hr>
 
 {% endfor %}
 

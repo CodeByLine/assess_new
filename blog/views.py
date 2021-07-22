@@ -9,30 +9,30 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.db.models import Count
 from django.contrib.auth.models import User
 from django.conf import settings
-# from accounts.models import CustomUser
+# from accounts.models import User
 
 def index(request):
     # pass
     post_list = Post.objects.all()
     num_posts = Post.objects.count()
-    # num_comments = Comment.objects.count()
-    # comments = Comment.objects.all()
+    num_comments = Comment.objects.count()
+    comment_list = Comment.objects.all()
 
     # # The 'all()' is implied by default.
     # num_authors = Author.objects.count()
     # num_commenters = Commenter.objects.count()
 
-    # #SESSION
-    # num_visits = request.session.get('num_visits', 1)
-    # request.session['num_visits'] = num_visits + 1
+    #SESSION
+    num_visits = request.session.get('num_visits', 1)
+    request.session['num_visits'] = num_visits + 1
 
     
     context = {
         'num_posts': num_posts,
-        # 'num_comments': num_comments,
+        'num_comments': num_comments,
         # 'num_authors': num_authors,
     #     'num_commenters': num_commenters,
-    #     'num_visits': num_visits,  #SESSION
+        'num_visits': num_visits,  #SESSION
         'post_list' : post_list,
         # 'comments' : comments,
     }
@@ -70,16 +70,16 @@ class PostDetailView(generic.DetailView):
     # pass
     model = Post
 
-
     def post_detail_view(request, primary_key):
         post = get_object_or_404(Post, pk=primary_key)
-        # post_comments = Comment.objects.filter(post.kwargs['pk'])
+        
         post.author = User.objects.filter(id=post.author.id)
         return render(request, 'post_detail.html', context={'post': post})
 
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
+        # post_comments = Comment.objects.filter(id==kwargs)
     #     num_comments = Comment.objects.filter(
     #         post_connected=self.get_object)).count()
     #     post_connected = Comment.objects.filter(

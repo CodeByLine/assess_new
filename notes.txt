@@ -53,3 +53,17 @@ class User(AbstractBaseUser):
 
     def __str__(self):
         return self.email
+
+
+
+##### in blog/views.py:
+
+from django.contrib.auth.models import User
+from django.conf import settings
+# from accounts.models import User
+
+## The setup above works. But NOT:
+
+#from django.contrib.auth.models import User
+from django.conf import settings
+from accounts.models import User

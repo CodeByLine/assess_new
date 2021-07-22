@@ -4,13 +4,25 @@
 {% block content %}
 <h1>Index</h1>
 
+This blog has a total of <strong>{{num_posts}}</strong>  post{{num_posts|pluralize:"s"}} by <strong>{{ authors}}</strong> author{{num_author|pluralize:"s"}}. <br>
+
+And there {{num_comments|pluralize:"is,are"}} a total of <strong>{{num_comments}}</strong> comment{{num_comments|pluralize:"s"}} by {{num_commenters}} commenter{{num_commenter|pluralize:"s"}}.<br>
+<hr>
+<br>
+
 {% for post in post_list %}
-Post: {{post}} <br>
-Post Title: <a href="{{ post.get_absolute_url }}"> {{post.post_title}} </a>
+
+<p><strong>Post Title: </strong> <a href="{{ post.get_absolute_url }}"> {{post.post_title}}</a>  <span class="muted small"> ({{post.post_created_at}})</span> </p>
+<p><strong>Author: </strong><a href="{% url 'author-detail' post.author.id %}"> {{ post.author }}</a></p>
+
 {% endfor %}
 <br>
-<br>
 <hr>
-Post-List: {{post_list}}
+
+You have visited this page {{num_visits}} time{{num_visits|pluralize:"s"}}.
+
+<p>visitor => blabber1234</p>
+<p>hunter => pounce2021</p>
+<p>tiny => 1234meow</p>
 
 {% endblock %}

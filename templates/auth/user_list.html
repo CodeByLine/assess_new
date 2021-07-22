@@ -9,9 +9,9 @@
   <ul>
     {% for author in authors %}
       <li>
-       author {{author}}; <br>
-       author.id {{author.id}} <br>
-       author.post {{author.post}} <br>
+       author: {{author}}; <br>
+       author.id: {{author.id}} <br>
+       author.posts: {{author.posts}} <br>
         <a href="{% url 'author-detail' author.id %}">{{author}}</a> 
       </li>
     {% endfor %}

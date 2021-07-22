@@ -15,6 +15,7 @@ class Post(models.Model):
     post_created_at = models.DateTimeField(auto_now_add=True)
     post_updated_at = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(User, related_name="posts", on_delete=models.CASCADE)
+    # comment = models.ForeignKey(Comment,related_name="comments", on_delete=models.CASCADE)
     
     # author = models.ForeignKey(User, related_name="author", on_delete=models.CASCADE)
 
@@ -27,9 +28,9 @@ class Post(models.Model):
     #   on_delete=models.CASCADE
     # )
     
-    # @property
-    # def num_comments(self):
-    #     return Comment.objects.filter(post_connected=self).count()
+    @property
+    def num_comments(self):
+        return Comment.objects.filter(post_connected=self).count()
 
     @property
     def post_comments(self):
@@ -88,10 +89,12 @@ class Comment(models.Model):
     comment_created_at = models.DateTimeField(auto_now_add=True)
     comment_updated_at = models.DateTimeField(auto_now=True)
 
-    commenter = models.ForeignKey(
-      settings.AUTH_USER_MODEL, 
-      on_delete=models.CASCADE
-    )
+    commenter = models.ForeignKey(User, related_name="commented", on_delete=models.CASCADE)
+
+    # commenter = models.ForeignKey(
+    #   settings.AUTH_USER_MODEL, 
+    #   on_delete=models.CASCADE
+    # )
 
     post_connected =  models.ForeignKey(Post, related_name='posts', on_delete=models.CASCADE, default=None, null=True)
 
@@ -100,7 +103,6 @@ class Comment(models.Model):
 
     def __str__(self):
         return str(self.commenter) + ' :  ' + self.comment_title[:40]
-      
 
     def get_absolute_url(self):
         return reverse('post-detail', args=[str(self.id)])
