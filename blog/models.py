@@ -6,7 +6,7 @@ from django.conf import settings
 from django.utils import timezone
 from django.db.models import Count
 
-User = settings.AUTH_USER_MODEL
+# User = settings.AUTH_USER_MODEL
 
 class Post(models.Model):
     post = models.TextField(max_length=1000)
@@ -16,8 +16,6 @@ class Post(models.Model):
     post_updated_at = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(User, related_name="posts", on_delete=models.CASCADE)
     # comment = models.ForeignKey(Comment,related_name="comments", on_delete=models.CASCADE)
-    
-    # author = models.ForeignKey(User, related_name="author", on_delete=models.CASCADE)
 
     # https://learndjango.com/tutorials/django-best-practices-referencing-user-model
 # from django.contrib.auth.models import User

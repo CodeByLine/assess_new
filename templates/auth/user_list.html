@@ -3,16 +3,19 @@
 {% block title %}<title>Auth User List</title>{% endblock %}
 {% block content %}
   <h1>Auth: Author List</h1>
+  
+  There are {{num_authors}} contributing authors to this blogging platform and a total of {{num_posts }} posts. <br>
   Authors: {{authors}}
-  There are {{num_authors}} contributing authors to this blogging platform and a total of {{num_posts }} posts.
+  <p>See 'queries.txt' for notes on extracting data from querysets  </p>
   {% if authors %}
+  
   <ul>
     {% for author in authors %}
       <li>
-       author: {{author}}; <br>
+       author:   <a href="{% url 'author-detail' author.id %}">{{author}}</a>  <br>
        author.id: {{author.id}} <br>
        author.posts: {{author.posts}} <br>
-        <a href="{% url 'author-detail' author.id %}">{{author}}</a> 
+      
       </li>
     {% endfor %}
   </ul>

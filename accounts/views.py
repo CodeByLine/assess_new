@@ -39,20 +39,20 @@ class AuthorListView(generic.ListView):
         return context
     
 
-class AuthorDetailView(generic.DetailView):
-    # pass
-    model = User
-    authors = User.objects.all()
-    context_object_name = 'author'
-    context = {
-        'authors' : authors,
-    }
+# class AuthorDetailView(generic.DetailView):
+#     # pass
+#     model = User
+#     authors = User.objects.all()
+#     context_object_name = 'author'
+#     context = {
+#         'authors' : authors,
+#     }
 
-    def get_queryset(self):
-        """Return queryset """
-        return User.objects.order_by('id')
+#     def get_queryset(self):
+#         """Return queryset """
+#         return User.objects.order_by('id')
 
-    def get_context_data(self, **kwargs):
-        context = super(AuthorDetailView, self).get_context_data(**kwargs)
+#     def get_context_data(self, **kwargs):
+#         context = super(AuthorDetailView, self).get_context_data(**kwargs)
     
-        return contex
+#         return context

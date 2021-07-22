@@ -7,10 +7,17 @@
 
 <h1>Author: {{ author }} </h1>
 
+author.username: {{author.username}} - author.id:
+{{author.id}}
+
 <br><br>
-Posts by {{ author.posts}}: <br><br>
+Posts by {{ author}}: <br><br>
+auth_post:{{author.posts}}
 
-
+{{uthor.posts.author}}
+{% for post in author_posts %}
+post:{{post}}
+{% endfor %}
 
 <p class="muted small">  Note: The variable "author_posts" is a queryset</p> 
 {% endblock %}

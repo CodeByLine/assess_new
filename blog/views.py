@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from blog.models import Post, Comment
 from django.views import generic
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -46,13 +46,6 @@ class PostListView(generic.ListView):
     pass
     model = Post
     post_list = Post.objects.all()
-   
-    # num_posts = Post.objects.count()
-    # num_authors = Author.objects.count()
-    # num_comments = Comment.objects.all().count()
-    # num_commenters = Commenter.objects.count()
-
-    # template_name = 'blog/post_list.html'  # Specify your own template name/location
 
     context_vars = {
     #     'num_posts': num_posts,
@@ -95,12 +88,13 @@ class AuthorListView(generic.ListView):
     template = 'auth/user_list.html'
     authors = User.objects.all()
     num_authors=User.objects.count()
-    # num_posts = Post.objects.count()
+    num_posts = Post.objects.count()
     # def get_authors(self, **kwargs):
     #     authors = User.objects.filter()
     context_vars = {
         'authors' : authors,
-
+        'num_authors' : num_authors,
+        'num_posts' : num_posts,
     }
 
     def get_context_data(self, **kwargs):
@@ -109,23 +103,63 @@ class AuthorListView(generic.ListView):
         return context
 
 class AuthorDetailView(generic.DetailView):
-    # view goes to /auth/user_detail
     # pass
     model = User
-    context_object_name = 'author'
     template = 'auth/user_detail.html'
+    authors = User.objects.all()
+    context_object_name = 'author'
+    context = {
+        'authors' : authors,
+    }
+        
 
-    # def get_queryset(self, **kwargs):
+    def author_detail_view(request, primary_key):
+        author = get_object_or_404(User, pk=primary_key)
+        author_posts = Post.objects.filter(pk='author_id')
+
+        return render(request, 'auth/author_detail.html', context={'author_post': author_post})
+
+    # def get_queryset(self):
     #     """Return queryset """
     #     return User.objects.order_by('id')
 
+    # def get_author_posts(self):
+    #     author_posts = Post.objects.filter_by('author_id')
+    #     return author_posts
 
+    # def get_context_data(self, **kwargs):
+    #     context = super(AuthorDetailView, self).get_context_data(**kwargs)
+    
+    #     return context
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        # author_posts = Post.objects.filter(author=self.kwargs['pk'])
-        context['author'] = self.kwargs.get("id")
-        return context
+# class AuthorDetailView(generic.DetailView):
+#     # view goes to /auth/user_detail
+#     # pass
+#     model = User
+#     context_object_name = 'author'
+#     template = 'auth/user_detail.html'
+
+#     def get_author(request, **kwargs):
+        # author = get_object_or_404(User, **kwargs == id)
+        # author_posts = get_object_or_404(Post, author.id == id)
+
+        # context = {
+        #     'author' : author,
+        #     'author_posts' : author_posts,
+        # }
+        # return context
+    # def get_queryset(request, **kwargs):
+        """Return queryset """
+        # author = User.objects.filter(**kwargs)
+        # if author.posts is not None:
+        #     author_posts = author.posts.all()
+        #     return author_posts
+        
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+        
+    #     return context
     
 
 ##### CRUD-POST
