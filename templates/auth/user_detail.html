@@ -5,19 +5,23 @@
 
 <h3>Auth Author Detail </h3>
 
-<h1>Author: {{ author }} </h1>
+<h2>Author: {{ author }} </h2>
 
-author.username: {{author.username}} - author.id:
+author.username: {{author.username}} <br>
+author.id:
 {{author.id}}
 
-<br><br>
-Posts by {{ author}}: <br><br>
-auth_post:{{author.posts}}
+<br><br><br>
+<h2>Posts by {{ author}}: </h2><br><br>
 
-{{uthor.posts.author}}
-{% for post in author_posts %}
-post:{{post}}
+
+{% for post in author.posts.all %}
+<h4>{{post.post_title }}</h4>
+<p class="small muted">{{post.post_created_at}} </p>
+<p>{{post.description}}</p>
 {% endfor %}
+
+
 
 <p class="muted small">  Note: The variable "author_posts" is a queryset</p> 
 {% endblock %}

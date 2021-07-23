@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import SignUpView, AuthorListView, AuthorDetailView
+from .views import SignUpView
 from . import views
 
 
@@ -8,6 +8,6 @@ urlpatterns = [
 ]
 
 # urlpatterns += [
-#     path('bbloggers/', views.AuthorListView.as_view(), name='bbloggers'),
-#     path('bbloggers/<int:pk>', views.AuthorDetailView.as_view(), name='author-detail')
+#     path('bbloggers/', views.AuthorListsView.as_view(), name='bbloggers'),
+#     path('bbloggers/<int:pk>', views.AuthorDetailsView.as_view(), name='author-detail')
 # ]

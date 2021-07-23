@@ -112,7 +112,7 @@ class AuthorDetailView(generic.DetailView):
         'authors' : authors,
     }
         
-
+# https://www.reddit.com/r/django/comments/okxt25/how_do_i_extract_authors_posts_in_viewspy_django/h5bhrzf?utm_source=share&utm_medium=web2x&context=3
     def author_detail_view(request, primary_key):
         author = get_object_or_404(User, pk=primary_key)
         author_posts = Post.objects.filter(pk='author_id')
