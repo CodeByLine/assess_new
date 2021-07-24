@@ -163,14 +163,14 @@ class AuthorDetailView(generic.DetailView):
     
 
 ##### CRUD-POST
-class PostCreateView(generic.CreateView):
-# class PostCreate(LoginRequiredMixin, CreateView):
-    pass
+# class PostCreateView(generic.CreateView):
+class PostCreateView(LoginRequiredMixin, CreateView):
+    # pass
     model = Post
-    # fields = ['post_title', 'description']
+    fields = ['post_title', 'description']
     # author = request.user
 
-class PostUpdate(generic.UpdateView):
+class PostUpdateView(generic.UpdateView):
     pass
 # class PostUpdate(LoginRequiredMixin, UpdateView):
     model = Post
