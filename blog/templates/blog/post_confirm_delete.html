@@ -5,4 +5,11 @@
 
 <h1>Post Confirm Delete</h1>
 
+<p>Are you sure you want to delete {{ post }}?</p>
+
+<form action="" method="POST">
+  {% csrf_token %}
+  <input type="submit" value="Yes, delete.">
+</form>
 {% endblock %}
+

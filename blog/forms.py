@@ -10,7 +10,6 @@ from .models import Post, Comment
 from django.contrib.auth.models import User
 
 class PostCreateForm(ModelForm):
-    # pass
 
     class Meta:
         model = Post
@@ -20,4 +19,4 @@ class PostUpdateForm(ModelForm):
     # pass
     class Meta:
         model = Post
-        fields = ['post_title', 'description']
+        fields = ['post_title', 'description', 'author']

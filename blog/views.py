@@ -182,16 +182,12 @@ class PostUpdate(LoginRequiredMixin, UpdateView):
     model = Post
     form = PostUpdateForm
     fields = ['post_title', 'description']
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('blogs')
 
-    def form_valid(self, form):
-        self.author.id == self.request.user.id
-        return super().form_valid(form)
-    #fields = '__all__' # Not recommended (potential security issue if more fields added)
 
 class PostDelete(generic.DeleteView):
 # class PostDelete(LoginRequiredMixin, DeleteView):
-    pass
+    # pass
     model = Post
     success_url = reverse_lazy('blogs')
 
