@@ -10,6 +10,7 @@ from django.db.models import Count
 from django.contrib.auth.models import User
 from django.conf import settings
 # from accounts.models import User
+from . forms import PostCreateForm, PostUpdateForm
 
 def index(request):
     # pass
@@ -19,7 +20,7 @@ def index(request):
     comment_list = Comment.objects.all()
 
     # # The 'all()' is implied by default.
-    # num_authors = Author.objects.count()
+    num_authors = User.objects.count()
     # num_commenters = Commenter.objects.count()
 
     #SESSION
@@ -30,7 +31,7 @@ def index(request):
     context = {
         'num_posts': num_posts,
         'num_comments': num_comments,
-        # 'num_authors': num_authors,
+        'num_authors': num_authors,
     #     'num_commenters': num_commenters,
         'num_visits': num_visits,  #SESSION
         'post_list' : post_list,
@@ -167,13 +168,25 @@ class AuthorDetailView(generic.DetailView):
 class PostCreateView(LoginRequiredMixin, CreateView):
     # pass
     model = Post
+    form = PostCreateForm
     fields = ['post_title', 'description']
-    # author = request.user
+    success_url = reverse_lazy('index')
 
-class PostUpdateView(generic.UpdateView):
-    pass
-# class PostUpdate(LoginRequiredMixin, UpdateView):
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+            
+# class PostUpdateView(generic.UpdateView):
+    # pass
+class PostUpdate(LoginRequiredMixin, UpdateView):
     model = Post
+    form = PostUpdateForm
+    fields = ['post_title', 'description']
+    success_url = reverse_lazy('index')
+
+    def form_valid(self, form):
+        self.author.id == self.request.user.id
+        return super().form_valid(form)
     #fields = '__all__' # Not recommended (potential security issue if more fields added)
 
 class PostDelete(generic.DeleteView):

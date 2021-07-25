@@ -4,7 +4,7 @@
 {% block content %}
 <h1>Index</h1>
 
-This blog has a total of <strong>{{num_posts}}</strong>  post{{num_posts|pluralize:"s"}} by <strong>{{ authors}}</strong> author{{num_author|pluralize:"s"}}. <br>
+This blog has a total of <strong>{{num_posts}}</strong>  post{{num_posts|pluralize:"s"}} by <strong>{{ num_authors}}</strong> author{{num_author|pluralize:"s"}}. <br>
 
 And there {{num_comments|pluralize:"is,are"}} a total of <strong>{{num_comments}}</strong> comment{{num_comments|pluralize:"s"}} by {{num_commenters}} commenter{{num_commenter|pluralize:"s"}}.<br>
 <hr>
@@ -21,8 +21,10 @@ And there {{num_comments|pluralize:"is,are"}} a total of <strong>{{num_comments}
 
 You have visited this page {{num_visits}} time{{num_visits|pluralize:"s"}}.
 
-<p>visitor => blabber1234</p>
-<p>hunter => pounce2021</p>
-<p>tiny => 1234meow</p>
+<p>coco => 1234woof<br>
+tiny => 1234meow <br>
+visitor => blabber1234 <br>
+hunter => pounce2021 <br>
+kitty => meow1234</p>
 
 {% endblock %}

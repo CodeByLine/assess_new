@@ -10,8 +10,11 @@
 </form>
 <br>
 <hr>
+<p>coco => 1234woof</p>
+<p>tiny => 1234meow</p>
 <p>visitor => blabber1234</p>
 <p>hunter => pounce2021</p>
+<p>kitty => meow1234</p>
 <hr>
 <h2>Log In 2: if user.is_authenticated</h2>
   {% if form.errors %}
@@ -31,7 +34,8 @@
     {% csrf_token %}
     <table>
       <tr>
-        
+        <td>{{ form.username.label_tag }}</td>
+        <td>{{ form.username }}</td>
       </tr>
       <tr>
         <td>{{ form.password.label_tag }}</td>
