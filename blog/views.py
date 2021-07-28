@@ -1,16 +1,16 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from blog.models import Post, Comment
 from django.views import generic
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required, permission_required
 from django.db.models import Count
 from django.contrib.auth.models import User
 from django.conf import settings
 # from accounts.models import User
-from . forms import PostCreateForm, PostUpdateForm
+from . forms import PostCreateForm, PostUpdateForm,  CommentForm
 
 def index(request):
     # pass
@@ -67,20 +67,35 @@ class PostDetailView(generic.DetailView):
     def post_detail_view(request, primary_key):
         post = get_object_or_404(Post, pk=primary_key)
         
-        post.author = User.objects.filter(id=post.author.id)
-        return render(request, 'post_detail.html', context={'post': post})
-
-
+        # post.author = User.objects.filter(id=post.author.id)
+        # return render(request, 'post_detail.html', context={'post': post})
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        # post_comments = Comment.objects.filter(id==kwargs)
-    #     num_comments = Comment.objects.filter(
-    #         post_connected=self.get_object)).count()
-    #     post_connected = Comment.objects.filter(
-    #         post_connected=self.get_object()).order_by('-comment_created_at')
-    #     data['comments'] = post_connected
-        
+
+        post_connected = Comment.objects.filter(
+            post_connected=self.get_object()).order_by('-comment_created_at')
+        data['comments'] = post_connected
+        if self.request.user.is_authenticated:
+            data['comment_form'] = CommentForm(instance=self.request.user)
+
         return data
+        
+    # def get_context_data(self, **kwargs):
+    #     data = super().get_context_data(**kwargs)
+    #     # post_connected = Comment.objects.filter(
+    #         # post_connected=self.get_object()).order_by('comment_created_at')
+    #     post_connected = Comment.objects.filter(self)
+    #     data['comments'] = post_connected
+    #     data['comment_form'] = CommentForm( )
+
+    #     return data
+
+    # def get_comment(self, request, *args, **kwargs):
+    #     new_comment = Comment(content=request.Comment.get('comment'),
+    #                               commenter=request.POST.get('commenter'),
+    #                               post_connected=self.get_object())
+    #     new_comment.save()
+    #     return self.get(self, request, *args, **kwargs)
 
 ##### AUTHOR
 class AuthorListView(generic.ListView):
@@ -90,8 +105,7 @@ class AuthorListView(generic.ListView):
     authors = User.objects.all()
     num_authors=User.objects.count()
     num_posts = Post.objects.count()
-    # def get_authors(self, **kwargs):
-    #     authors = User.objects.filter()
+
     context_vars = {
         'authors' : authors,
         'num_authors' : num_authors,
@@ -165,49 +179,128 @@ class AuthorDetailView(generic.DetailView):
 
 ##### CRUD-POST
 # class PostCreateView(generic.CreateView):
-class PostCreateView(LoginRequiredMixin, CreateView):
+class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     # pass
     model = Post
     form = PostCreateForm
     fields = ['post_title', 'description']
     success_url = reverse_lazy('index')
-
+            
+class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Post
+    form = PostUpdateForm
+    template = 'post-update.html'
+    fields = ['post_title', 'description']
+    success_url = reverse_lazy('blogs')
+    
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
-            
-# class PostUpdateView(generic.UpdateView):
-    # pass
-class PostUpdate(LoginRequiredMixin, UpdateView):
-    model = Post
-    form = PostUpdateForm
-    fields = ['post_title', 'description']
-    success_url = reverse_lazy('blogs')
+
+    def test_func(self):
+        post = self.get_object()
+        if self.request.user == post.author:
+            return True
+        return False
+
+    # def get_queryset(self):
+    #     queryset = super(PostUpdateView, self).get_queryset()
+    #     queryset = queryset.filter(author=self.request.user)
+    #     return queryset
 
 
-class PostDelete(generic.DeleteView):
-# class PostDelete(LoginRequiredMixin, DeleteView):
+# class PostDelete(generic.DeleteView):
+class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     # pass
     model = Post
     success_url = reverse_lazy('blogs')
+
+    def test_func(self):
+        post = self.get_object()
+        if self.request.user == post.author:
+            return True
+        return False
 
 
 ##### CRUD-COMMENT
-# class CommentCreate(generic.CreateView):
-# class CommentCreate(LoginRequiredMixin, CreateView):
-    # model = Comment
-    # fields = ['comment_title', 'comment_text']
+class CommentCreateView(LoginRequiredMixin, CreateView):
+    model = Comment
+    form = CommentForm
+    fields = ['comment_title', 'comment']
+    success_url = reverse_lazy('comment_detail')
 
+    def comment_create_view(request, pk):
+        template_name = 'comment_detail.html'
+        post = get_object_or_404(Post, pk=pk)
+        post.new_comment = None
+        # Comment posted
+        if request.method == 'POST':
+            comment_form = CommentForm(data=request.POST)
+            if comment_form.is_valid():
+
+#                 # Create Comment object but don't save to database yet
+                post.new_comment = comment_form.save(commit=False)
+#                 # Assign the current post to the comment
+                new_comment.post = post
+#                 # Save the comment to the database
+                new_comment.save()
+#         else:
+            comment_form = CommentForm()
+
+        return render(request, template_name, {'post': post,
+                    'new_comment': new_comment,
+                    'comment_form': comment_form})
+
+
+class CommentDetailView(LoginRequiredMixin, UserPassesTestMixin, generic.DetailView):
+    model = Comment
+    fields = ['comment_title', 'comment_text']
+    #fields = '__all__' # Not recommended (potential security issue if more fields added)
+    success_url = reverse_lazy('comment-detail')
+
+# class CommentCreate(generic.CreateView):
+class CommentCreateView(LoginRequiredMixin, CreateView):
+    model = Comment
+    form = CommentForm
+    fields = ['comment_title', 'comment']
+    success_url = reverse_lazy('blogs')
+
+    def get_commenter(request, form):
+        form.instance.commented = request.user
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # context['post'] = self.post_connected
+#         # self.commenter = user
+        return context
+
+    # def get_post(request, slug):
+    #     post = get_object_or_404(Post, slug=slug)
+    #     form = CommentCreateForm
+    #     if form.is_valid():
+    #         comment = form.save(commit=False)
+    #         post.post_connected=comment.post
+    #         comment.commenter.id = request.user.id
+    #         comment.save()
+    #         return redirect(request.path)
+    #     return render(request, 'blog/post_detail.html',{'post': post,'form': form,})
+
+    # def form_valid(request, form):
+    #     form.instance.commenter = request.user
+    #     return super().form_valid(form)
 
 # class CommentUpdate(generic.UpdateView):
-# class CommentUpdate(LoginRequiredMixin, UpdateView):
-    # model = Comment
+class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Comment
+    fields = ['comment_title', 'comment_text']
     #fields = '__all__' # Not recommended (potential security issue if more fields added)
+    success_url = reverse_lazy('post-detail')
 
 # class CommentDelete(generic.DeleteView):
-# class CommentDelete(LoginRequiredMixin, DeleteView):
-    # model = Comment
-    # success_url = reverse_lazy('blogs')
+class CommentDeleteView(LoginRequiredMixin, DeleteView):
+    model = Comment
+    success_url = reverse_lazy('post-detail')
 
 
 

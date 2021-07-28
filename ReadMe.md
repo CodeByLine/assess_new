@@ -12,3 +12,5 @@ https://learndjango.com/tutorials/django-best-practices-referencing-user-model
 But discovered this:
 https://www.codingforentrepreneurs.com/blog/how-to-create-a-custom-django-user-model
 
+And this:
+https://dev.to/radualexandrub/how-to-create-a-comment-section-for-your-django-blog-3egp

@@ -15,7 +15,6 @@ class Post(models.Model):
     post_created_at = models.DateTimeField(auto_now_add=True)
     post_updated_at = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(User, related_name="posts", on_delete=models.CASCADE)
-    # comment = models.ForeignKey(Comment,related_name="comments", on_delete=models.CASCADE)
 
     # https://learndjango.com/tutorials/django-best-practices-referencing-user-model
 # from django.contrib.auth.models import User
@@ -30,15 +29,16 @@ class Post(models.Model):
     def num_comments(self):
         return Comment.objects.filter(post_connected=self).count()
 
-    @property
-    def post_comments(self):
-        return Comment.objects.filter(post_connected=self)
+
+    # @property
+    # def post_comments(self):
+    #     return Comment.objects.filter(post_connected=self)
 
     def __str__(self):
         return f'{self.author or ""} – {self.post_title[:40]}'
 
-    # def get_absolute_url(self):
-    #     return reverse('post-detail', args=[str(self.id)])
+    def get_absolute_url(self):
+        return reverse('post-detail', args=[str(self.id)])
 
     def get_absolute_url(self):
         return "/blog/{}/".format(self.pk)
@@ -69,14 +69,14 @@ class Comment(models.Model):
     comment_created_at = models.DateTimeField(auto_now_add=True)
     comment_updated_at = models.DateTimeField(auto_now=True)
 
-    commenter = models.ForeignKey(User, related_name="commented", on_delete=models.CASCADE)
+    commenter = models.ForeignKey(User, related_name="commented", null=True, blank=True, on_delete=models.CASCADE)
 
     # commenter = models.ForeignKey(
     #   settings.AUTH_USER_MODEL, 
     #   on_delete=models.CASCADE
     # )
 
-    post_connected =  models.ForeignKey(Post, related_name='posts', on_delete=models.CASCADE, default=None, null=True)
+    post_connected =  models.ForeignKey(Post, related_name='comment', on_delete=models.CASCADE, default=None, null=True) #
 
     class Meta:
         ordering = ['comment_created_at']
@@ -85,6 +85,6 @@ class Comment(models.Model):
         return str(self.commenter) + ' :  ' + self.comment_title[:40]
 
     def get_absolute_url(self):
-        return reverse('post-detail', args=[str(self.id)])
+        return reverse('post-detail', args=[str(self.id)]) 
 
 
