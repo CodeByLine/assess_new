@@ -41,7 +41,7 @@ All Comment Query: {{post.post_comments.all}} All
       {% for comment in comments %}
       <div class="comments" style="padding: 10px;">
         <p class="font-weight-bold">
-          {{ comment.comment_title }}
+          {{ comment.comment_title }} - {{comment.commenter}}
           <span class=" text-muted font-weight-normal">
             {{ comment.comment_created_at }}
           </span>
@@ -53,19 +53,14 @@ All Comment Query: {{post.post_comments.all}} All
   </div>
   <div class="col-md-8 card mb-4 mt-3 ">
     <div class="card-body">
-        <h3>Another View</h3>
-      {% if new_comment %}
-      <div class="alert alert-success" role="alert">
-        Your comment is awaiting moderation
-      </div>
-      {% else %}
+
       <h3>Leave a comment</h3>
       <form method="post" style="margin-top: 1.3em;">
         {{ comment_form.as_p }}
         {% csrf_token %}
         <button type="submit" class="btn btn-primary  btn-lg">Submit</button>
       </form>
-      {% endif %}
+  
     </div>
   </div>
 </div>

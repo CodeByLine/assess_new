@@ -63,12 +63,30 @@ class PostListView(generic.ListView):
 class PostDetailView(generic.DetailView):
     # pass
     model = Post
+    def post_detail(request, **kwargs):
+    #     template_name = 'post_detail.html'
+        post = get_object_or_404(Post, **kwargs)
+        comments = post.comments.filter(active=True)
+    #     new_comment = None
+    #     # Comment posted
+    #     if request.method == 'POST':
+    #         comment_form = CommentForm(data=request.POST)
+    #         if comment_form.is_valid():
 
-    def post_detail_view(request, primary_key):
-        post = get_object_or_404(Post, pk=primary_key)
-        
-        # post.author = User.objects.filter(id=post.author.id)
-        # return render(request, 'post_detail.html', context={'post': post})
+    #             # Create Comment object but don't save to database yet
+    #             new_comment = comment_form.save(commit=False)
+    #             # Assign the current post to the comment
+    #             new_comment.post = post
+    #             # Save the comment to the database
+    #             new_comment.save()
+    #     else:
+    #         comment_form = CommentForm()
+
+    #     return (request, template_name, {'post': post,
+    #                                         'comments': comments,
+    #                                         'new_comment': new_comment,
+    #                                         'comment_form': comment_form})
+
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
 
@@ -80,22 +98,7 @@ class PostDetailView(generic.DetailView):
 
         return data
         
-    # def get_context_data(self, **kwargs):
-    #     data = super().get_context_data(**kwargs)
-    #     # post_connected = Comment.objects.filter(
-    #         # post_connected=self.get_object()).order_by('comment_created_at')
-    #     post_connected = Comment.objects.filter(self)
-    #     data['comments'] = post_connected
-    #     data['comment_form'] = CommentForm( )
 
-    #     return data
-
-    # def get_comment(self, request, *args, **kwargs):
-    #     new_comment = Comment(content=request.Comment.get('comment'),
-    #                               commenter=request.POST.get('commenter'),
-    #                               post_connected=self.get_object())
-    #     new_comment.save()
-    #     return self.get(self, request, *args, **kwargs)
 
 ##### AUTHOR
 class AuthorListView(generic.ListView):
