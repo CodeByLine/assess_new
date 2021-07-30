@@ -68,9 +68,9 @@ class Comment(models.Model):
     comment = models.TextField(max_length=1000)
     comment_created_at = models.DateTimeField(auto_now_add=True)
     comment_updated_at = models.DateTimeField(auto_now=True)
-
+    
     commenter = models.ForeignKey(User, related_name="commented", null=True, blank=True, on_delete=models.CASCADE)
-
+    active = models.BooleanField(default=False)
     # commenter = models.ForeignKey(
     #   settings.AUTH_USER_MODEL, 
     #   on_delete=models.CASCADE
