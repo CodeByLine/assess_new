@@ -60,43 +60,49 @@ class PostListView(generic.ListView):
         context.update(PostListView.context_vars)
         return context
 
-class PostDetailView(generic.DetailView):
-    # pass
-    model = Post
-    def post_detail(request, **kwargs):
-    #     template_name = 'post_detail.html'
-        post = get_object_or_404(Post, **kwargs)
-        comments = post.comments.filter(active=True)
-    #     new_comment = None
-    #     # Comment posted
-    #     if request.method == 'POST':
-    #         comment_form = CommentForm(data=request.POST)
-    #         if comment_form.is_valid():
+def post_detail(request, pk):
+    template_name = 'post_detail.html'
+    post = get_object_or_404(Post, pk=pk)
+    comments = post.comment.filter(active=True)
+    new_comment = None
+    # Comment posted
+    if request.method == 'POST':
+        comment_form = CommentForm(data=request.POST)
+        if comment_form.is_valid():
 
-    #             # Create Comment object but don't save to database yet
-    #             new_comment = comment_form.save(commit=False)
-    #             # Assign the current post to the comment
-    #             new_comment.post = post
-    #             # Save the comment to the database
-    #             new_comment.save()
-    #     else:
-    #         comment_form = CommentForm()
+            # Create Comment object but don't save to database yet
+            new_comment = comment_form.save(commit=False)
+            # Assign the current post to the comment
+            new_comment.post_connected = post
+            # Save the comment to the database
+            new_comment.save()
+    else:
+        comment_form = CommentForm()
 
-    #     return (request, template_name, {'post': post,
-    #                                         'comments': comments,
-    #                                         'new_comment': new_comment,
-    #                                         'comment_form': comment_form})
+    return render(request, template_name, {'post': post,
+                                           'comments': comments,
+                                           'new_comment': new_comment,
+                                           'comment_form': comment_form})
 
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
 
-        post_connected = Comment.objects.filter(
-            post_connected=self.get_object()).order_by('-comment_created_at')
-        data['comments'] = post_connected
-        if self.request.user.is_authenticated:
-            data['comment_form'] = CommentForm(instance=self.request.user)
+# class PostDetailView(generic.DetailView):
+#     pass
+#     model = Post
+#     def post_detail_view(request, primary_key):
+#         post = get_object_or_404(Post, pk=primary_key)
+        
+#         # post.author = User.objects.filter(id=post.author.id)
+#         # return render(request, 'post_detail.html', context={'post': post})
+#     def get_context_data(self, **kwargs):
+#         data = super().get_context_data(**kwargs)
 
-        return data
+#         post_connected = Comment.objects.filter(
+#             post_connected=self.get_object()).order_by('-comment_created_at')
+#         data['comments'] = post_connected
+#         if self.request.user.is_authenticated:
+#             data['comment_form'] = CommentForm(instance=self.request.user)
+
+#         return data
         
 
 
