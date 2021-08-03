@@ -81,7 +81,7 @@ def post_detail(request, pk):
         comment_form = CommentForm()
 
 #below: template's path
-    return render(request, 'blog/post_detail.html', {'post': post,
+    return render(request, 'post_detail.html', {'post': post,
                                            'comments': comments,
                                            'new_comment': new_comment,
                                            'comment_form': comment_form})

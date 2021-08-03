@@ -7,11 +7,15 @@ urlpatterns = [
 
 urlpatterns += [
     path('blogs/', views.PostListView.as_view(), name='blogs'),
-    path('blog/<int:pk>/', views.post_detail, name='post_detail'),
-    # path('blog/<int:pk>/', views.PostDetailView.as_view(), name='post-detail'),
+
     path('create/', views.PostCreateView.as_view(), name='post-create'),
     path('blog/<int:pk>/update/', views.PostUpdateView.as_view(), name='post-update'),
     path('blog/<int:pk>/delete/', views.PostDeleteView.as_view(), name='post-delete'),
+]
+
+urlpatterns += [
+    path('blog/<int:pk>/', views.post_detail, name='post_detail'),
+    # path('blog/<int:pk>/', views.PostDetailView.as_view(), name='post-detail'),
 ]
 
 urlpatterns += [ 
