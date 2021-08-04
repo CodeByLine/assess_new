@@ -6,13 +6,15 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required, permission_required
-# from django.db.models import Count
+from django.db.models import Count
 from django.contrib.auth.models import User
-# from django.conf import settings
+from django.conf import settings
+# from accounts.models import User
 from . forms import PostCreateForm, PostUpdateForm,  CommentForm
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import redirect
 
+#### This is a working copy of blog/views.py BEFORE attempts to bind comment to commenter
 
 def index(request):
     # pass
@@ -82,9 +84,9 @@ class PostListView(generic.ListView):
 
 # #below: template's path
 #     return render(request, 'post_detail.html', {'post': post,
-#               'comments': comments,
-#               'new_comment': new_comment,
-#               'comment_form': comment_form})
+#                                            'comments': comments,
+#                                            'new_comment': new_comment,
+#                                            'comment_form': comment_form})
 
 
 ### CLASS-BASED VIEW - WORKING - DISPLAYS,SAVES,BINDS TO POST
@@ -113,7 +115,7 @@ class PostDetailView(generic.DetailView):
 #             # Assign the current post to the comment
             new_comment.post_connected = post
             if comment_form.is_valid():
-#             # Save the comment to the database
+    #             # Save the comment to the database
                 new_comment.save()
                 return redirect('/')
             else:
@@ -126,12 +128,12 @@ class PostDetailView(generic.DetailView):
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
 
-    #comments
+        #comments
         post_connected = Comment.objects.filter(
             post_connected=self.get_object()).order_by('-comment_created_at')
         data['comments'] = post_connected
 
-    #blank form
+        #blank form
         if self.request.user.is_authenticated:
             comment_form = CommentForm()
             data['comment_form'] = CommentForm(instance=self.request.user)
@@ -205,7 +207,7 @@ class AuthorDetailView(generic.DetailView):
         # return context
         
     # def get_queryset(request, **kwargs):
-     #   """Return queryset """
+        """Return queryset """
         # author = User.objects.filter(**kwargs)
         # if author.posts is not None:
         #     author_posts = author.posts.all()
@@ -218,20 +220,14 @@ class AuthorDetailView(generic.DetailView):
     #     return context
     
 
-##### CRUD - POST
+##### CRUD-POST
 # class PostCreateView(generic.CreateView):
-class PostCreateView(LoginRequiredMixin, CreateView):
+class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     # pass
     model = Post
     form = PostCreateForm
     fields = ['post_title', 'description']
     success_url = reverse_lazy('index')
-
-    def form_valid(self, form):
-        if self.request.user.is_authenticated:
-            form.instance.author = self.request.user
-            return super().form_valid(form)
-
             
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
@@ -269,36 +265,34 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return False
 
 
-##### CRUD - COMMENT
+##### CRUD-COMMENT
+class CommentCreateView(LoginRequiredMixin, CreateView):
+    model = Comment
+    form = CommentForm
+    fields = ['comment_title', 'comment']
+    success_url = reverse_lazy('comment_detail')
 
-## NOT needed
-# class CommentCreateView(LoginRequiredMixin, CreateView):
-#     model = Comment
-#     form = CommentForm
-#     fields = ['comment_title', 'comment']
-#     success_url = reverse_lazy('comment_detail')
+    def comment_create_view(request, pk):
+        template_name = 'comment_detail.html'
+        post = get_object_or_404(Post, pk=pk)
+        post.new_comment = None
+        # Comment posted
+        if request.method == 'POST':
+            comment_form = CommentForm(data=request.POST)
+            if comment_form.is_valid():
 
-#     def comment_create_view(request, pk):
-#         template_name = 'comment_detail.html'
-#         post = get_object_or_404(Post, pk=pk)
-#         post.new_comment = None
-#         # Comment posted
-#         if request.method == 'POST':
-#             comment_form = CommentForm(data=request.POST)
-#             if comment_form.is_valid():
+#                 # Create Comment object but don't save to database yet
+                post.new_comment = comment_form.save(commit=False)
+#                 # Assign the current post to the comment
+                new_comment.post = post
+#                 # Save the comment to the database
+                new_comment.save()
+#         else:
+            comment_form = CommentForm()
 
-# #                 # Create Comment object but don't save to database yet
-#                 post.new_comment = comment_form.save(commit=False)
-# #                 # Assign the current post to the comment
-#                 new_comment.post = post
-# #                 # Save the comment to the database
-#                 new_comment.save()
-# #         else:
-#             comment_form = CommentForm()
-
-#         return render(request, template_name, {'post': post,
-#                     'new_comment': new_comment,
-#                     'comment_form': comment_form})
+        return render(request, template_name, {'post': post,
+                    'new_comment': new_comment,
+                    'comment_form': comment_form})
 
 
 class CommentDetailView(LoginRequiredMixin, UserPassesTestMixin, generic.DetailView):
@@ -307,38 +301,37 @@ class CommentDetailView(LoginRequiredMixin, UserPassesTestMixin, generic.DetailV
     #fields = '__all__' # Not recommended (potential security issue if more fields added)
     success_url = reverse_lazy('comment-detail')
 
-# Not needed
 # class CommentCreate(generic.CreateView):
-# class CommentCreateView(LoginRequiredMixin, CreateView):
-#     model = Comment
-#     form = CommentForm
-#     fields = ['comment_title', 'comment']
-#     success_url = reverse_lazy('blogs')
+class CommentCreateView(LoginRequiredMixin, CreateView):
+    model = Comment
+    form = CommentForm
+    fields = ['comment_title', 'comment']
+    success_url = reverse_lazy('blogs')
 
-#     def get_commenter(request, form):
-#         form.instance.commented = request.user
-#         return super().form_valid(form)
+    def get_commenter(request, form):
+        form.instance.commented = request.user
+        return super().form_valid(form)
 
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         # context['post'] = self.post_connected
-# #         # self.commenter = user
-#         return context
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # context['post'] = self.post_connected
+#         # self.commenter = user
+        return context
 
-#     def get_post(request, slug):
-#         post = get_object_or_404(Post, slug=slug)
-#         form = CommentCreateForm
-#         if form.is_valid():
-#             comment = form.save(commit=False)
-#             post.post_connected=comment.post
-#             comment.commenter.id = request.user.id
-#             comment.save()
-#             return redirect(request.path)
-#         return render(request, 'blog/post_detail.html',{'post': post,'form': form,})
+    # def get_post(request, slug):
+    #     post = get_object_or_404(Post, slug=slug)
+    #     form = CommentCreateForm
+    #     if form.is_valid():
+    #         comment = form.save(commit=False)
+    #         post.post_connected=comment.post
+    #         comment.commenter.id = request.user.id
+    #         comment.save()
+    #         return redirect(request.path)
+    #     return render(request, 'blog/post_detail.html',{'post': post,'form': form,})
 
-#     def form_valid(request, form):
-#         form.instance.commenter = request.user
-#         return super().form_valid(form)
+    # def form_valid(request, form):
+    #     form.instance.commenter = request.user
+    #     return super().form_valid(form)
 
 # class CommentUpdate(generic.UpdateView):
 class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
