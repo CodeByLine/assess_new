@@ -44,7 +44,7 @@ def index(request):
 
 #####POST
 class PostListView(generic.ListView):
-    pass
+    # pass
     model = Post
     post_list = Post.objects.all()
 
