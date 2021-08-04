@@ -63,6 +63,7 @@ class PostListView(generic.ListView):
         context.update(PostListView.context_vars)
         return context
 
+### FUNCTION-BASED VIEW-WORKING:DISPLAYS,SAVES,BINDS TO POST
 # def post_detail(request, pk):
 #     template_name = 'post_detail.html'
 #     post = get_object_or_404(Post, pk=pk)
@@ -89,6 +90,8 @@ class PostListView(generic.ListView):
 #                                            'new_comment': new_comment,
 #                                            'comment_form': comment_form})
 
+
+### CLASS-BASED VIEW-WORKING:DISPLAYS,SAVES,BINDS TO POST
 class PostDetailView(generic.DetailView):
 #     pass
     model = Post
@@ -104,11 +107,6 @@ class PostDetailView(generic.DetailView):
         
         return self.render_to_response(context)
 
-    # def post_detail_view(request, primary_key):
-    #     post = get_object_or_404(Post, pk=primary_key)
-        
-    #     post.author = User.objects.filter(id=post.author.id)
-    #     return render(request, 'post_detail.html', context={'post': post})
 
     def post(self, request, *args, **kwargs):
         comment_form = self.form_class(request.POST)
@@ -119,7 +117,6 @@ class PostDetailView(generic.DetailView):
 #             # Assign the current post to the comment
             new_comment.post_connected = post
             if comment_form.is_valid():
-                # post.new_comment
     #             # Save the comment to the database
                 new_comment.save()
                 return redirect('/')
@@ -230,8 +227,6 @@ class PostDetailView(generic.DetailView):
         # post_connected = Comment.objects.filter(self.object)
         # AttributeError at /blog/2/
         # 'PostDetailView' object has no attribute 'id'
-
-
 
 
     # def post_detail_view(request, primary_key):
