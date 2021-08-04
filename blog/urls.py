@@ -14,8 +14,8 @@ urlpatterns += [
 ]
 
 urlpatterns += [
-    path('blog/<int:pk>/', views.post_detail, name='post_detail'),
-    # path('blog/<int:pk>/', views.PostDetailView.as_view(), name='post-detail'),
+    # path('blog/<int:pk>/', views.post_detail, name='post_detail'),
+    path('blog/<int:pk>/', views.PostDetailView.as_view(), name='post-detail'),
 ]
 
 urlpatterns += [ 
