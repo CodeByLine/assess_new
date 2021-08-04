@@ -117,6 +117,7 @@ class PostDetailView(generic.DetailView):
             comment_form = CommentForm(data=request.POST)
             new_comment = comment_form.save(commit=False)
 #             # Assign the current post to the comment
+            new_comment.post_connected = post
             if comment_form.is_valid():
                 # post.new_comment
     #             # Save the comment to the database
