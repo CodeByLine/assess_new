@@ -46,7 +46,7 @@ def index(request):
 
 #####POST
 class PostListView(generic.ListView):
-    pass
+    # pass
     model = Post
     post_list = Post.objects.all()
 
@@ -106,14 +106,17 @@ class PostDetailView(generic.DetailView):
 
     def post(self, request, *args, **kwargs):
         comment_form = self.form_class(request.POST)
-        post = get_object_or_404(Post, **kwargs)
+        post = get_object_or_404(Post, **kwargs)   
+        new_comment = None
         if self.request.user.is_authenticated:
             comment_form = CommentForm(data=request.POST)
             new_comment = comment_form.save(commit=False)
-#             # Assign the current post to the comment
+            # Assign the current post to the comment
             new_comment.post_connected = post
             if comment_form.is_valid():
-#             # Save the comment to the database
+            # Save the commenter         
+                new_comment.commenter = self.request.user
+            # Save the comment to the database
                 new_comment.save()
                 return redirect('/')
             else:
@@ -123,12 +126,13 @@ class PostDetailView(generic.DetailView):
         return render(request, self.template_name, {'comment_form': comment_form})
 
 
+
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
 
     #comments
         post_connected = Comment.objects.filter(
-            post_connected=self.get_object()).order_by('-comment_created_at')
+            post_connected=self.get_object()).filter(active=True).order_by('-comment_created_at')
         data['comments'] = post_connected
 
     #blank form
