@@ -61,91 +61,91 @@ class PostListView(generic.ListView):
     #     return context
 
 ### FUNCTION-BASED VIEW - WORKING - DISPLAYS,SAVES,BINDS TO POST
-def post_detail(request, pk):
-    template_name = 'post_detail.html'
-    post = get_object_or_404(Post, pk=pk)
-    comments = post.comment.filter(active=True)
-    new_comment = None
-    # Comment posted
-    if request.method == 'POST':
-        comment_form = CommentForm(data=request.POST)
+# def post_detail(request, pk):
+#     template_name = 'post_detail.html'
+#     post = get_object_or_404(Post, pk=pk)
+#     comments = post.comment.filter(active=True)
+#     new_comment = None
+#     # Comment posted
+#     if request.method == 'POST':
+#         comment_form = CommentForm(data=request.POST)
         
-        if comment_form.is_valid():    
-            comment_form.instance.commenter = request.user      
-            # Create Comment object but don't save to database yet
-            new_comment = comment_form.save(commit=False)
-            # Assign the current post to the comment
-            new_comment.post_connected = post
-            # Save the commenter   
-            # commenter = new_comment.commenter
-            commenter = request.POST.get('commenter')
-            # Save the comment to the database
-            new_comment.save()
-            return redirect('/')
-    else:
-        comment_form = CommentForm()
+#         if comment_form.is_valid():    
+#             comment_form.instance.commenter = request.user      
+#             # Create Comment object but don't save to database yet
+#             new_comment = comment_form.save(commit=False)
+#             # Assign the current post to the comment
+#             new_comment.post_connected = post
+#             # Save the commenter   
+#             # commenter = new_comment.commenter
+#             commenter = request.POST.get('commenter')
+#             # Save the comment to the database
+#             new_comment.save()
+#             return redirect('/')
+#     else:
+#         comment_form = CommentForm()
 
-#below: template's path
-    return render(request, 'post_detail.html', {'post': post,
-              'comments': comments,
-              'new_comment': new_comment,
-              'comment_form': comment_form})
+# #below: template's path
+#     return render(request, 'post_detail.html', {'post': post,
+#               'comments': comments,
+#               'new_comment': new_comment,
+#               'comment_form': comment_form})
 
 
 ### CLASS-BASED VIEW - WORKING - DISPLAYS,SAVES,BINDS TO POST
-# class PostDetailView(generic.DetailView):
-#     pass
-    # model = Post
-    # form_class = CommentForm
+class PostDetailView(generic.DetailView):
+    pass
+    model = Post
+    form_class = CommentForm
 
-    # def get(self, request, *args, **kwargs):
-    #     try:
-    #         self.object = self.get_object()
-    #     except ObjectDoesNotExist:
-    #         return redirect('blogs')
+    def get(self, request, *args, **kwargs):
+        try:
+            self.object = self.get_object()
+        except ObjectDoesNotExist:
+            return redirect('blogs')
         
-    #     context = self.get_context_data(object=self.object)
+        context = self.get_context_data(object=self.object)
         
-    #     return self.render_to_response(context)
+        return self.render_to_response(context)
 
 
-    # def post(self, request, *args, **kwargs):
-    #     comment_form = self.form_class(request.POST)
-    #     post = get_object_or_404(Post, **kwargs)   
-    #     new_comment = None
-    #     if self.request.user.is_authenticated:
-    #         comment_form = CommentForm(data=request.POST)
-    #         new_comment = comment_form.save(commit=False)
-    #         # Assign the current post to the comment
-    #         new_comment.post_connected = post
-    #         if comment_form.is_valid():
-    #         # Save the commenter         
-    #             new_comment.commenter = self.request.user
-    #         # Save the comment to the database
-    #             new_comment.save()
-    #             return redirect('/')
-    #         else:
-    #             comment_form = CommentForm()
-    #         return HttpResponseRedirect('/success/')
+    def post(self, request, *args, **kwargs):
+        comment_form = self.form_class(request.POST)
+        post = get_object_or_404(Post, **kwargs)   
+        new_comment = None
+        if self.request.user.is_authenticated:
+            comment_form = CommentForm(data=request.POST)
+            new_comment = comment_form.save(commit=False)
+            # Assign the current post to the comment
+            new_comment.post_connected = post
+            if comment_form.is_valid():
+            # Save the commenter         
+                new_comment.commenter = self.request.user
+            # Save the comment to the database
+                new_comment.save()
+                return redirect('/')
+            else:
+                comment_form = CommentForm()
+            return HttpResponseRedirect('/success/')
 
-    #     return render(request, self.template_name, {'comment_form': comment_form})
+        return render(request, self.template_name, {'comment_form': comment_form})
 
 
 
-    # def get_context_data(self, **kwargs):
-    #     data = super().get_context_data(**kwargs)
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
 
-    # #comments
-    #     post_connected = Comment.objects.filter(
-    #         post_connected=self.get_object()).filter(active=True).order_by('-comment_created_at')
-    #     data['comments'] = post_connected
+    #comments
+        post_connected = Comment.objects.filter(
+            post_connected=self.get_object()).filter(active=True).order_by('-comment_created_at')
+        data['comments'] = post_connected
 
-    # #blank form
-    #     if self.request.user.is_authenticated:
-    #         comment_form = CommentForm()
-    #         data['comment_form'] = CommentForm(instance=self.request.user)
+    #blank form
+        if self.request.user.is_authenticated:
+            comment_form = CommentForm()
+            data['comment_form'] = CommentForm(instance=self.request.user)
 
-    #     return data        
+        return data        
 
 
 ##### AUTHOR
