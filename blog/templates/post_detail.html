@@ -15,8 +15,14 @@
 <p><strong>Post: </strong></p>
 <p>{{post.post}}</p>
 <br>
-<br>
 
+{% if request.user == post.author %}
+
+<a class="btn btn-primary btn-sm" href="{% url 'post-update' post.id %}">Update This Post</a>
+<a class="btn btn-danger btn-sm" href="{% url 'post-delete' post.id %}">Delete This Post</a>
+{% endif %} 
+<br>
+<br>
 <h4> There {{post.num_comments|pluralize:"is,are"}} {{post.num_comments}} comment{{ post.num_comments|pluralize:"s" }} on this post:</h4>
 <hr>
 

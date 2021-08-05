@@ -54,10 +54,11 @@ class PostListView(generic.ListView):
         'post_list' : post_list,
     }
 
-    def get_context_data(self, **kwargs):
-        context = super(PostListView, self).get_context_data(**kwargs)
-        context.update(PostListView.context_vars)
-        return context
+### Block below isn't needed
+    # def get_context_data(self, **kwargs):
+    #     context = super(PostListView, self).get_context_data(**kwargs)
+    #     context.update(PostListView.context_vars)
+    #     return context
 
 ### FUNCTION-BASED VIEW - WORKING - DISPLAYS,SAVES,BINDS TO POST
 def post_detail(request, pk):

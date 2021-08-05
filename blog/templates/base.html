@@ -31,13 +31,21 @@
 
 <hr>
 {% if user.is_authenticated %}
-<li>User: {{ user}}</li>
-<a href="{% url 'logout' %}">Logout</a></li>
+<p><button type="button" class="btn btn-outline-secondary">User: {{ user}}</button></p>
+
+<p><button type="button" class="btn btn-outline-success"><a href="{% url 'post-create' %}">Create a new post</a></button></p>
+
+<p><button type="button" class="btn btn-outline-secondary"><a href="{% url 'logout' %}">Logout</a></button></p>
+
 {% else %}
-<li><a href="{% url 'login' %}">Login</a></li></li>
+<p><button type="button" class="btn btn-outline-secondary"><a href="{% url 'login' %}">Login</a></button></p>
+
 {% endif %} 
 </div>
 {% endblock %}
+<hr>
+
+<hr>
 
 <div class="container main">
 {% block content %} {% endblock %}
