@@ -11,7 +11,7 @@ from django.contrib.auth.models import User
 # from django.conf import settings
 from . forms import PostCreateForm, PostUpdateForm,  CommentForm
 from django.core.exceptions import ObjectDoesNotExist
-from django.shortcuts import redirect
+
 
 
 def index(request):
