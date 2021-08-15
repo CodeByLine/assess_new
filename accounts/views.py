@@ -58,4 +58,3 @@ class SignUpView(CreateView):
 # #         context.update(AuthorDetailsView.context2)
 # #         return context
     
-# #         return context

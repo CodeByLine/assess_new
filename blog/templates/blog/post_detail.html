@@ -16,7 +16,13 @@
 <p>{{post.post}}</p>
 <br>
 <br>
+{% if request.user == post.author %}
 
+<a class="btn btn-primary btn-sm" href="{% url 'post-update' post.id %}">Update This Post</a>
+<a class="btn btn-danger btn-sm" href="{% url 'post-delete' post.id %}">Delete This Post</a>
+{% endif %} 
+
+<br><br>
 <h4> There {{post.num_comments|pluralize:"is,are"}} {{post.num_comments}} comment{{ post.num_comments|pluralize:"s" }} on this post:</h4>
 <hr>
 
@@ -25,6 +31,8 @@
 All Comment Query: {{post.post_comments.all}} All
 
 {% for comment in post.post_comments %}
+
+
 <!-- Comment: {{ post.comments }} <br> -->
 <strong>Commenter: </strong>{{comment.commenter}}  <br>
 <strong>Comment title: </strong>{{comment.comment_title}} <br>
@@ -58,7 +66,7 @@ All Comment Query: {{post.post_comments.all}} All
       <form method="post" style="margin-top: 1.3em;">
         {{ comment_form.as_p }}
         {% csrf_token %}
-        <button type="submit" class="btn btn-primary  btn-lg">Submit</button>
+        <button type="submit" class="btn btn-primary">Submit</button>
       </form>
   
     </div>

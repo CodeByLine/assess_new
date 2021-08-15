@@ -23,5 +23,5 @@ class PostUpdateForm(ModelForm):
 class CommentForm(ModelForm):
     class Meta:
         model = Comment
-        fields = ['comment_title', 'comment', 'commenter']
+        fields = ['comment_title', 'comment']
 
